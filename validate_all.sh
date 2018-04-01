@@ -2,7 +2,8 @@
 
 # This script is responsible for identifying the broken links by sending http requests.
 # As the first command line argument provide the directory to do the search, 
-# if not by default it will be the current working directory
+# if not by default it will be the current working directory.
+# In the final report, we consider the links with HTTP status from 200-400 as valid.
 
 DIR="0"
 
@@ -161,19 +162,27 @@ function increaseStatus {
 }
 
 function printReports {
+
+	# Calculating total link's validity
+	TOTAL=$((STATUS_SUCCESS+STATUS_REDIRECT+STATUS_CLIENT_ERROR+STATUS_SERVER_CLIENT))
+	TOTAL_VALIDITY=$(echo "scale=2; ((($STATUS_SUCCESS + $STATUS_REDIRECT)) / $TOTAL) * 100" | bc)
+	
 	echo ""
-	echo "[Report] Total link's STATUS"
-	echo "============================" 
+	echo "Preparing reports"
+	echo "Total link's STATUS"
+	echo "===================" 
 	if [ "$report" == "terminal" ]; then
 		echo -e "\e[42m$STATUS_SUCCESS\e[49m Success links" 
 		echo -e "\e[43m$STATUS_REDIRECT\e[49m Redirection links" 
 		echo -e "\e[41m$STATUS_CLIENT_ERROR\e[49m Client error links" 
-		echo -e "\e[45m$STATUS_SERVER_ERROR\e[49m Server error links" 
+		echo -e "\e[45m$STATUS_SERVER_ERROR\e[49m Server error links"
+		echo "Total link's validity: $TOTAL_VALIDITY%"
 	else
 		echo "$STATUS_SUCCESS Success links" 
 		echo "$STATUS_REDIRECT Redirection links" 
 		echo "$STATUS_CLIENT_ERROR Client error links" 
-		echo "$STATUS_SERVER_ERROR Server error links" 
+		echo "$STATUS_SERVER_ERROR Server error links"
+		echo "Total link's validity: $TOTAL_VALIDITY%"
 	fi
 	
 	if [ "$report" =  "email" ]; then
