@@ -5,7 +5,15 @@ Our mission here is to provide a tool that can check link found not only in html
 Also, we extend the features of our tool to perform First Depth Search to identify even more links found under GitHub repositories.
 
 
-# Works for
+# Try it out
 
-Currently, our tools works for GitHub repostiroes. 
-However, it can also be applied on local repositories.
+There are curretly two venues for using our tool:
+	* Added here the repository's link, your mail address, and we will analyze it for you. 
+	* Download our tool and use it as a commnad line arguments
+
+When adding your repo for online analysis, we are creating a clone of it and by using travis we are analyzing and reporting.
+An additional feature of the first approach is the crontab interval a user can set to perform analysis in specific intervals.
+
+# Contributions and use Repos
+
+	* [Bash-spinner](https://github.com/tlatsas/bash-spinner)

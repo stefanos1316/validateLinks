@@ -110,6 +110,7 @@ function printForTerminal {
 	GETSTATUS=$(echo $1 | awk -F "|" '{print $2}')
 	GETLINK=$(echo $1 | awk -F "|" '{print $3}')
 
+	# Adding the color for invisible mode to make an awesome printing
  	if [ ! -z $GETSTATUS ]; then 
 		if [ $GETSTATUS -lt 300 ]; then
 			echo -e "|-\e[42m$GETSTATUS\e[49m-| $GETLINK"	
