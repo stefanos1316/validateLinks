@@ -8,12 +8,13 @@ Also, we extend the features of our tool to perform First Depth Search to identi
 # Try it out
 
 There are curretly two venues for using our tool:
-	* Added here the repository's link, your mail address, and we will analyze it for you. 
-	* Download our tool and use it as a commnad line arguments
+
+* Added here the repository's link, your mail address, and we will analyze it for you. 
+* Download our tool and use it as a commnad line arguments
 
 When adding your repo for online analysis, we are creating a clone of it and by using travis we are analyzing and reporting.
 An additional feature of the first approach is the crontab interval a user can set to perform analysis in specific intervals.
 
 # Contributions and use Repos
 
-	* [Bash-spinner](https://github.com/tlatsas/bash-spinner)
+* [Bash-spinner](https://github.com/tlatsas/bash-spinner)
