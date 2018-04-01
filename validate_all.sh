@@ -65,7 +65,7 @@ fi
 
 
 # Create tmp directories to store results which later on will be push as an email notifications to the user
-if [ "$report" -ne "email" ]; then
+if [ "$report" = "email" ]; then
 	rm -rf tmp
 	mkdri tmp
 fi
@@ -97,7 +97,7 @@ function traverse {
 			echo "---------------------------------------------------------------------" 
 			echo File: $1/$i 
 			# Calling function to check the status of the $i file's link 
-			if [ "$report" -ne "email" ]; then
+			if [ "$report" = "email" ]; then
 				getLinkStatus $1/$i >> tmp/1.txt
 			else
 				getLinkStatus $1/$i
@@ -110,16 +110,18 @@ function printForTerminal {
 	GETSTATUS=$(echo $1 | awk -F "|" '{print $2}')
 	GETLINK=$(echo $1 | awk -F "|" '{print $3}')
 
-	if [ $GETSTATUS -lt 300 ]; then
-		echo -e "\e[42m|$GETSTATUS|\e[49m $GETLINK"	
-	elif [ $GETSTATUS -lt 400 ]; then
-		echo -e "\e[43m|$GETSTATUS|\e[49m $GETLINK"	
-	elif [ $GETSTATUS -lt 500 ]; then
-		echo -e "\e[41m|$GETSTATUS|\e[49m $GETLINK"
-	elif [ $GETSTATUS -lt 600 ]; then
-		echo -e "\e[45m|$GETSTATUS|\e[49m $GETLINK"
-	else
-		echo "Unknow option..."
+ 	if [ ! -z $GETSTATUS ]; then 
+		if [ $GETSTATUS -lt 300 ]; then
+			echo -e "|-\e[42m$GETSTATUS\e[49m-| $GETLINK"	
+		elif [ $GETSTATUS -lt 400 ]; then
+			echo -e "|-\e[43m$GETSTATUS\e[49m-| $GETLINK"	
+		elif [ $GETSTATUS -lt 500 ]; then
+			echo -e "|-\e[41m$GETSTATUS\e[49m-| $GETLINK"
+		elif [ $GETSTATUS -lt 600 ]; then
+			echo -e "|-\e[45m$GETSTATUS\e[49m-| $GETLINK"
+		else
+			echo "Unknow option..."
+		fi
 	fi
 }
 
@@ -140,18 +142,20 @@ done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr
 function increaseStatus {
 
 	STATUS=$(echo $1 | awk -F "|" '{print $2}')
-
-	# This long case statement is responsible for increasing the STATUS variable counts
- 	if [ $STATUS -lt 300 ]; then
-		((++STATUS_SUCCESS))
-	elif [ $STATUS -lt 400 ]; then
-		((++STATUS_REDIRECT))
-	elif [ $STATUS -lt 500 ]; then
-		 ((++STATUS_CLIENT_ERROR))
-	elif [ $STATUS -lt 600 ]; then
-		 ((++STATUS_SERVER_ERROR))
-	else
-		echo "Such status don't exist."
+	
+	if [ ! -z $STATUS ]; then 
+		# This long case statement is responsible for increasing the STATUS variable counts
+ 		if [ $STATUS -lt 300 ]; then
+			((++STATUS_SUCCESS))
+		elif [ $STATUS -lt 400 ]; then
+			((++STATUS_REDIRECT))
+		elif [ $STATUS -lt 500 ]; then
+			((++STATUS_CLIENT_ERROR))
+		elif [ $STATUS -lt 600 ]; then
+			((++STATUS_SERVER_ERROR))
+		else
+			echo "Such status don't exist."
+		fi
 	fi
 }
 
@@ -170,9 +174,12 @@ function printReports {
 		echo "$STATUS_CLIENT_ERROR Client error links" 
 		echo "$STATUS_SERVER_ERROR Server error links" 
 	fi
-	echo " " 
-	echo "[Logs] Detailed report" 
-	echo "======================" 
+	
+	if [ "$report" =  "email" ]; then
+		echo " " 
+		echo "[Logs] Detailed report" 
+		echo "======================"
+	fi 
 }
 
 
