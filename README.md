@@ -15,6 +15,6 @@ There are curretly two venues for using our tool:
 When adding your repo for online analysis, we are creating a clone of it and by using travis we are analyzing and reporting.
 An additional feature of the first approach is the crontab interval a user can set to perform analysis in specific intervals.
 
-# Contributions and use Repos
+# Contributions and used Repositories
 
 * [Bash-spinner](https://github.com/tlatsas/bash-spinner)
