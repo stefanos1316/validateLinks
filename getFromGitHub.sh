@@ -29,4 +29,4 @@ REPO_NAME=$(echo $REPO | awk -F"/" '{print $5}')
 mv $REPO_NAME cloned_repo
 
 # Using validate_all.sh to get the status of the repository
-bash validate_all.sh --report terminal --dir cloned_repo/$REPO_NAME
+bash validate_all.sh --report email --dir cloned_repo/$REPO_NAME

@@ -68,7 +68,7 @@ fi
 # Create tmp directories to store results which later on will be push as an email notifications to the user
 if [ "$report" = "email" ]; then
 	rm -rf tmp
-	mkdri tmp
+	mkdir tmp
 fi
 
 # Function declarations
