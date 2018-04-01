@@ -24,8 +24,8 @@ fi
 
 if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == "--h" ]; then
 	echo ""
-	echo "Script for Grading Student Repositories"
-	echo "======================================="
+	echo "Script for validating links in  Repositories"
+	echo "============================================"
 	echo ""
 	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
 	echo "--dir <path>"				Add related path
