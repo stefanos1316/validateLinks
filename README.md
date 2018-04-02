@@ -4,6 +4,7 @@ A repository with purpose on reporting if the existing links in a users reposito
 
 Our mission here is to provide a tool that can check link found not only in html documents but any kind of. 
 Also, we extend the features of our tool to perform First Depth Search to identify even more links found under GitHub repositories.
+To tool can report its results in a terminal or in an email form. 
 
 
 # Try it out
