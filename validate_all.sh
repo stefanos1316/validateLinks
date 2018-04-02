@@ -29,6 +29,7 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == 
 	echo ""
 	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
 	echo "--dir <path>"				Add related path
+	echo "--link <given link>			This option is not allowed if a --dir i given"
 	echo "--debug					Enable debug mode (printing messages)"
 	echo ""
 	exit
@@ -45,6 +46,7 @@ ELEMENTS=${#args[@]}
 # Initiallize parameters
 report="0"
 debugging="0"
+LINK="0"
 
 # echo each element in array  
 # for lQsds
@@ -53,6 +55,7 @@ for (( i=0;i<$ELEMENTS;++i)); do
 	case "${args[${i}]}" in 
 	("--report") report=${args[i+1]} ;;
 	("--dir") DIR=${args[i+1]} ;;
+	("--link") LINK=${args[i+1]} ;;
 	("--debug") debugging="1" ;;
 	esac
 done
@@ -61,6 +64,12 @@ if [ "$report" != "terminal" ] && [ "$report" != "email" ]; then
 	echo ""
 	echo -e "\e[41mWrong\e[49m command line parameters, please revise and execute again."
 	echo ""
+	exit
+fi
+
+# If both LINK and DIR are give the count it as error
+if [ "$LINK" != "0" ] && [ "$DIR" != "0" ]; then
+	echo "You  are not allowed to give a --dir and --link at the same time, please try again"
 	exit
 fi
 
@@ -161,6 +170,20 @@ function increaseStatus {
 	fi
 }
 
+function getLinksFromLink { 
+
+while  read LINE; do
+	URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
+	if [ "$report" == "terminal" ]; then
+        	printForTerminal "$URL"
+   	else
+        	echo $URL
+   	fi
+   	increaseStatus $URL
+done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
+
+}
+
 function printReports {
 
 	# Calculating total link's validity
@@ -192,9 +215,12 @@ function printReports {
 	fi 
 }
 
+# If link is given instead of dir then call getLinksFromLink function
+if [ "$LINK" != "0" ]; then
+	getLinksFromLink $LINK
+fi
 
-if [ -z "$DIR" ]
-then
+if [[ -z "$DIR" ]] && [[ "$DIR" != "0" ]] ; then
 	if [ "$report" == "email" ]; then
 		traverse . 0 >> tmp/1.txt
 	else
