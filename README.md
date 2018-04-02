@@ -19,7 +19,7 @@ An additional feature of the first approach is the crontab interval a user can s
 
 <p align="center">
 <table class="image">
-<tr><td> <img src="media/1.jpg"  /></td></tr>
+<tr><td> <img src="media/1.png"  /></td></tr>
 <tr><td class="caption" align="center" >Single task execution</td></tr>
 </table>
 </p>
