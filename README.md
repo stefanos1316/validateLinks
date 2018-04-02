@@ -1,4 +1,5 @@
-# validateLinks
+# About this repository
+
 A repository with purpose on reporting if the existing links in a users repository are valid.
 
 Our mission here is to provide a tool that can check link found not only in html documents but any kind of. 
@@ -21,6 +22,7 @@ An additional feature of the first approach is the crontab interval a user can s
 
 	$ bash getFromGitHub.sh --report <terminal, email> --repository https://github.com/stefanos1316/validateLinks.git
 
+
 # Overview
 
 <p align="center">
@@ -30,6 +32,8 @@ An additional feature of the first approach is the crontab interval a user can s
 </table>
 </p>
 
+
 # Contributions and used Repositories
 
 * [Bash-spinner](https://github.com/tlatsas/bash-spinner)
+* Special thanks to my friend [Alexandre De Masi](https://github.com/SheepOnMeth) for the testing.
