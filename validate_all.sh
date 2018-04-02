@@ -5,12 +5,6 @@
 # if not by default it will be the current working directory.
 # In the final report, we consider the links with HTTP status from 200-400 as valid.
 
-DIR="0"
-
-STATUS_SUCCESS=0
-STATUS_REDIRECT=0
-STATUS_CLIENT_ERROR=0
-STATUS_SERVER_ERROR=0
 
 # This tool can be used in a terminal or as a GitHub webhook to provide reports.
 if [ "$#" -eq 0 ]; then
@@ -47,6 +41,12 @@ ELEMENTS=${#args[@]}
 report="0"
 debugging="0"
 LINK="0"
+DIR="0"
+
+STATUS_SUCCESS=0
+STATUS_REDIRECT=0
+STATUS_CLIENT_ERROR=0
+STATUS_SERVER_ERROR=0
 
 # echo each element in array  
 # for lQsds
@@ -147,7 +147,7 @@ while read LINE; do
    	echo $URL
    fi
    increaseStatus $URL
-done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | uniq )
+done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
 
 function increaseStatus {
@@ -215,24 +215,27 @@ function printReports {
 	fi 
 }
 
+#if [[ -z "$DIR" ]] && [[ "$LINK" == "0" ]] ; then
+if [ "$DIR" != "0" ]; then 
+	if [ -z "$DIR" ]; then
+		if [ "$report" == "email" ]; then
+			traverse . 0 >> tmp/1.txt
+		else
+			traverse . 0 
+		fi
+	else
+		if [ "$report" == "email" ]; then
+			traverse $DIR 0 >> tmp/1.txt
+		else
+			traverse $DIR 0 
+		fi
+	fi
+fi
+
 # If link is given instead of dir then call getLinksFromLink function
 if [ "$LINK" != "0" ]; then
 	getLinksFromLink $LINK
 fi
-
-if [[ -z "$DIR" ]] && [[ "$DIR" != "0" ]] ; then
-	if [ "$report" == "email" ]; then
-		traverse . 0 >> tmp/1.txt
-	else
-		traverse . 0 
-	fi
-else
-	if [ "$report" == "email" ]; then
-		traverse $DIR 0 >> tmp/1.txt
-	else
-		traverse $DIR 0 
-	fi
-fi	
 
 if [ "$report" == "email" ]; then
 	printReports >> tmp/top.txt
