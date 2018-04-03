@@ -22,8 +22,9 @@ if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == 
 	echo "============================================"
 	echo ""
 	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
-	echo "--dir <path>"				Add related path
-	echo "--link <given link>			This option is not allowed if a --dir i given"
+	echo "--dir <path>				Provide related path of a directory"
+	echo "--link <given link>			This option is not allowed if a --dir i given."
+	echo "--repository <repo's link> 		Provide the link of the repo to be analyzed."
 	echo "--debug					Enable debug mode (printing messages)"
 	echo ""
 	exit
@@ -42,6 +43,7 @@ report="0"
 debugging="0"
 LINK="0"
 DIR="0"
+REPO="0"
 
 STATUS_SUCCESS=0
 STATUS_REDIRECT=0
@@ -56,6 +58,7 @@ for (( i=0;i<$ELEMENTS;++i)); do
 	("--report") report=${args[i+1]} ;;
 	("--dir") DIR=${args[i+1]} ;;
 	("--link") LINK=${args[i+1]} ;;
+	("--repository") REPO=${args[i+1]} ;;
 	("--debug") debugging="1" ;;
 	esac
 done
@@ -68,8 +71,8 @@ if [ "$report" != "terminal" ] && [ "$report" != "email" ]; then
 fi
 
 # If both LINK and DIR are give the count it as error
-if [ "$LINK" != "0" ] && [ "$DIR" != "0" ]; then
-	echo "You  are not allowed to give a --dir and --link at the same time, please try again"
+if [ "$LINK" != "0" ] && [ "$DIR" != "0" ] && ["$REPO" != "0" ]; then
+	echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
 	exit
 fi
 
@@ -177,10 +180,51 @@ while  read LINE; do
 	if [ "$report" == "terminal" ]; then
         	printForTerminal "$URL"
    	else
-        	echo $URL
+        	echo $URL >> tmp/1.txt
    	fi
    	increaseStatus $URL
 done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
+
+}
+
+
+function getRepoLinks {
+	
+	REPO=$1
+
+	# If the user gave / ending then remove it
+	if [[ "$REPO" =~ '/'$ ]]; then
+        	REPO=$(echo $REPO | sed 's/\/$//g')
+	fi
+
+	# If a user gave .git ending then remove it
+	if [[ "$REPO" =~ '.git'$ ]]; then
+        	REPO=$(echo $REPO | sed 's/\.git$//g')
+	fi
+
+	#Clone repo and mv it in a temp file, that is cloned_repo
+	if [ -d "cloned_repo" ]; then
+        	rm -rf cloned_repo
+        	mkdir cloned_repo
+	fi
+
+	source "spinner.sh"
+	start_spinner 'Cloning repository...'
+	git clone $REPO
+	stop_spinner $?
+
+	REPO_NAME=$(echo $REPO | awk -F"/" '{print $5}')
+	mv $REPO_NAME cloned_repo
+
+	#Now set DIR equal to REPO and threat is a DIR
+	DIR=cloned_repo/$REPO_NAME
+	# Now call the traverse function as used for normal directories
+	#if [ "$report" == "email" ]; then
+        #	traverse cloned_repo/$REPO_NAME 0 >> tmp/1.txt
+        #else
+         #      	traverse cloned_repo/$REPO_NAME 0
+       	#fi
+
 
 }
 
@@ -215,6 +259,16 @@ function printReports {
 	fi 
 }
 
+# If link is given instead of dir then call getLinksFromLink function
+if [ "$LINK" != "0" ]; then
+	getLinksFromLink $LINK
+fi
+
+# If repository option is provided then act accordingly
+if [ "$REPO" != "0" ]; then
+	getRepoLinks $REPO
+fi
+
 #if [[ -z "$DIR" ]] && [[ "$LINK" == "0" ]] ; then
 if [ "$DIR" != "0" ]; then 
 	if [ -z "$DIR" ]; then
@@ -230,11 +284,6 @@ if [ "$DIR" != "0" ]; then
 			traverse $DIR 0 
 		fi
 	fi
-fi
-
-# If link is given instead of dir then call getLinksFromLink function
-if [ "$LINK" != "0" ]; then
-	getLinksFromLink $LINK
 fi
 
 if [ "$report" == "email" ]; then

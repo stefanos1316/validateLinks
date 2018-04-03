@@ -24,6 +24,11 @@ An additional feature of the first approach is the crontab interval a user can s
 	$ bash getFromGitHub.sh --report <terminal, email> --repository https://github.com/stefanos1316/validateLinks.git
 
 
+	or
+
+	$ bash getFromGitHub.sh --report <terminal, email> --link https://stefanos1316.github.io/my_curriculum_vitae/index.html
+
+
 # Overview
 
 <p align="center">
