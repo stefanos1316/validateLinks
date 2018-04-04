@@ -204,11 +204,11 @@ function getRepoLinks {
 
 	#Clone repo and mv it in a temp file, that is cloned_repo
 	if [ -d "cloned_repo" ]; then
-        	rm -rf cloned_repo
-        	mkdir cloned_repo
+        	rm -rf cloned_repo/*
+	else	
+		mkdir cloned_repo
 	fi
 
-	mkdir cloned_repo
 
 	source "spinner.sh"
 	start_spinner 'Cloning repository...'
