@@ -7,4 +7,5 @@ install:
 - sudo apt-get install lynx
 
 script: 
+- ls cloned_repo
 - bash validateLinks --report terminal --repository https://github.com/stefanos1316/my_curriculum_vitae.git
