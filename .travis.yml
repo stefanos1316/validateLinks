@@ -7,4 +7,5 @@ install:
 - sudo apt-get install lynx
 
 script: 
+- export WWW_HOME="http://www.yahoo.com/"
 - bash validateLinks --report terminal --link https://stefanos1316.github.io/my_curriculum_vitae/index.html
