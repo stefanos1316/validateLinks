@@ -1,10 +1,10 @@
-# About this repository
+# About validateLinks
 
-A repository with purpose on reporting if the existing links in a users repository are valid.
+A repository with purpose on reporting if the existing links in a user's repository, local directory, or a givne link are valid.
 
-Our mission here is to provide a tool that can check link found not only in html documents but any kind of. 
-Also, we extend the features of our tool to perform First Depth Search to identify even more links found under GitHub repositories.
-To tool can report its results in a terminal or in an email form. 
+Our mission here is to provide a tool that can check if the links found, not only in html documents but any kind of, in different documents are not broken. 
+Also, we extend the features of our tool to perform First Depth Search (FDS) to identify even more links found under tree directories.
+The tool can report its results in a terminal or in a form of email reports giving the descriptive analysis and an overall report. 
 
 
 # Try it out
@@ -17,16 +17,16 @@ There are curretly two venues for using our tool:
 When adding your repo for online analysis, we are creating a clone of it and by using travis we are analyzing and reporting.
 An additional feature of the first approach is the crontab interval a user can set to perform analysis in specific intervals.
 
-	$ bash validate_all.sh --report <terminal, email> --dir ../${ROOT_DIR}/
+	$ bash validateLinks --report <terminal, email> --dir ../${ROOT_DIR}/
 
 	or
 
-	$ bash getFromGitHub.sh --report <terminal, email> --repository https://github.com/stefanos1316/validateLinks.git
+	$ bash validateLinks --report <terminal, email> --repository https://github.com/stefanos1316/validateLinks.git
 
 
 	or
 
-	$ bash getFromGitHub.sh --report <terminal, email> --link https://stefanos1316.github.io/my_curriculum_vitae/index.html
+	$ bash validateLinks --report <terminal, email> --link https://stefanos1316.github.io/my_curriculum_vitae/index.html
 
 
 # Overview

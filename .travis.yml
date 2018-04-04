@@ -1,0 +1,7 @@
+language: bash
+
+sudo: required
+dist: trusty
+
+script: 
+- bash validateLinks --report terminal --link https://stefanos1316.github.io/my_curriculum_vitae/index.html
