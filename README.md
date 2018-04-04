@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stefanos1316/validateLinks.svg?branch=master)](https://travis-ci.org/stefanos1316/validateLinks)
+
 # About validateLinks
 
 A repository with purpose on reporting if the existing links in a user's repository, local directory, or a givne link are valid.
