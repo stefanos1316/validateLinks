@@ -7,6 +7,11 @@ Also, we extend the features of our tool to perform First Depth Search (FDS) to 
 The tool can report its results in a terminal or in a form of email reports giving the descriptive analysis and an overall report. 
 
 
+# Dependencies
+
+* Install lynx command for --link option
+
+
 # Try it out
 
 There are curretly two venues for using our tool:
