@@ -8,3 +8,4 @@ install:
 
 script: 
 - bash validateLinks --report terminal --repository https://github.com/stefanos1316/my_curriculum_vitae.git
+- echo "Done with testing1" |mail -s "[Travis-CI] Test" sgeorgiou@aueb.gr
