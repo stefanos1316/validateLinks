@@ -143,13 +143,15 @@ function getLinkStatus {
 
 while read LINE; do
    URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
-   
-   if [ "$report" == "terminal" ]; then
-	printForTerminal "$URL"
-   else
-   	echo $URL
-   fi
-   increaseStatus $URL
+ 
+   if [[ ${URL} != *"|000|"* ]]; then 
+   	if [ "$report" == "terminal" ]; then
+		printForTerminal "$URL"
+   	else
+   		echo $URL
+   	fi 
+	increaseStatus $URL
+   fi 	
 done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
 
@@ -177,12 +179,14 @@ function getLinksFromLink {
 
 while  read LINE; do
 	URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
-	if [ "$report" == "terminal" ]; then
-        	printForTerminal "$URL"
-   	else
-        	echo $URL >> tmp/1.txt
-   	fi
-   	increaseStatus $URL
+  	if [[ ${URL} != *"|000|"* ]]; then 
+		if [ "$report" == "terminal" ]; then
+        		printForTerminal "$URL"
+   		else
+        		echo $URL >> tmp/1.txt
+   		fi
+   		increaseStatus $URL
+	fi
 done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
 
 }
