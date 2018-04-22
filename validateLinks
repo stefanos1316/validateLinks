@@ -26,16 +26,45 @@ if [ "$#" -eq 0 ]; then
 fi
 
 
-if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == "--h" ]; then
+if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo 
 	echo ${bold}NAME${default}
 	echo "	validateLinks"
 	echo
 	echo ${bold}SYNOPSIS${default}
-	echo "	validateLinks [${underline}OPTION${default}]... [${underline}DIRECTORY${default}]... [${underline}LINK${default}]..."
-	echo 
+	echo "	${bold}validateLinks${default} [${underline}OPTION${default}]... [${underline}DIRECTORY${default}]... [${underline}LINK${default}]..."
+	echo
 	echo "${bold}DESCRIPTION${default}"
-	echo "	Performs links validation over a single web-page and identifies which links are broken and valide. Also, it can performe depth first search in a directory to validate all file's links."
+	echo "	Performs links validation over a single web-page and identifies which links are broken and valide. Also, it can performe depth first search in a directory to validate all file's links. "
+	echo "	If no option is given it validates all links found in the current working directory"
+	echo
+	echo "	${bold}-p, --passing${default}"
+	echo
+	echo "		show all the links with response 2XX (Success)"
+	echo
+	echo "	${bold}-r, --redirection${default}"
+	echo
+	echo "		show all the links with response 3XX (Redirection)"
+	echo
+	echo "	${bold}-c, --clientError${default}"
+	echo 
+	echo "		show all the links with response 4XX (Client Error)"
+	echo
+	echo "	${bold}-s, --serverError${default}"
+	echo
+	echo "		show all the links with response 5XX (Server Error)"
+	echo
+	echo "	${bold}-v, --version${default}"	
+	echo
+	echo "		output version information and exit"
+	echo
+	echo "	${bold-o, --overall${default}}"
+	echo
+	echo "		output statistics based on the collected results"
+	echo 
+	echo "	${bold}-h, --help${default}"
+	echo
+	echo "		display this help list and exit"
 	echo
 	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
 	echo "--dir <path>				Provide related path of a directory"
@@ -79,16 +108,16 @@ for (( i=0;i<$ELEMENTS;++i)); do
 	esac
 done
 
-if [ "$report" != "terminal" ] && [ "$report" != "email" ]; then
+if [ "$report" != "terminal" -a "$report" != "email" ]; then
 	echo 
-	echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
+	>&2 echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
 	echo 
 	exit
 fi
 
 # If both LINK and DIR are give the count it as error
-if [ "$LINK" != "0" ] && [ "$DIR" != "0" ] && ["$REPO" != "0" ]; then
-	echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
+if [ "$LINK" != "0" -o "$DIR" != "0" -a "$REPO" != "0" ]; then
+	>&2 echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
 	exit
 fi
 
@@ -237,16 +266,6 @@ function getRepoLinks {
 
 	REPO_NAME=$(echo $REPO | awk -F"/" '{print $5}')
 	mv $REPO_NAME cloned_repo
-
-	#Now set DIR equal to REPO and threat is a DIR
-	DIR=cloned_repo/$REPO_NAME
-	# Now call the traverse function as used for normal directories
-	#if [ "$report" == "email" ]; then
-        #	traverse cloned_repo/$REPO_NAME 0 >> tmp/1.txt
-        #else
-         #      	traverse cloned_repo/$REPO_NAME 0
-       	#fi
-
 
 }
 
