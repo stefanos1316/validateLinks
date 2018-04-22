@@ -6,6 +6,16 @@
 # In the final report, we consider the links with HTTP status from 200-400 as valid.
 
 
+# Text fonts
+bold=$(tput bold)
+underline=$(tput smul)
+redlabel=$(tput setab 1)
+greenlabel=$(tput setab 2)
+yellowlabel=$(tput setab 3)
+magentalabel=$(tput setab 4)
+default=$(tput sgr0)
+
+
 # This tool can be used in a terminal or as a GitHub webhook to provide reports.
 if [ "$#" -eq 0 ]; then
 	echo ""
@@ -17,16 +27,22 @@ fi
 
 
 if [ "$1" == "-h" ] || [ "$1" == "-help" ] || [ "$1" == "--help" ] || [ "$1" == "--h" ]; then
-	echo ""
-	echo "Script for validating links in  Repositories"
-	echo "============================================"
-	echo ""
+	echo 
+	echo ${bold}NAME${default}
+	echo "	validateLinks"
+	echo
+	echo ${bold}SYNOPSIS${default}
+	echo "	validateLinks [${underline}OPTION${default}]... [${underline}DIRECTORY${default}]... [${underline}LINK${default}]..."
+	echo 
+	echo "${bold}DESCRIPTION${default}"
+	echo "	Performs links validation over a single web-page and identifies which links are broken and valide. Also, it can performe depth first search in a directory to validate all file's links."
+	echo
 	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
 	echo "--dir <path>				Provide related path of a directory"
 	echo "--link <given link>			This option is not allowed if a --dir i given."
 	echo "--repository <repo's link> 		Provide the link of the repo to be analyzed."
 	echo "--debug					Enable debug mode (printing messages)"
-	echo ""
+	echo 
 	exit
 fi
 
@@ -64,9 +80,9 @@ for (( i=0;i<$ELEMENTS;++i)); do
 done
 
 if [ "$report" != "terminal" ] && [ "$report" != "email" ]; then
-	echo ""
-	echo -e "\e[41mWrong\e[49m command line parameters, please revise and execute again."
-	echo ""
+	echo 
+	echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
+	echo 
 	exit
 fi
 
@@ -126,13 +142,13 @@ function printForTerminal {
 	# Adding the color for invisible mode to make an awesome printing
  	if [ ! -z $GETSTATUS ]; then 
 		if [ $GETSTATUS -lt 300 ]; then
-			echo -e "|-\e[42m$GETSTATUS\e[49m-| $GETLINK"	
+			echo -e "|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 400 ]; then
-			echo -e "|-\e[43m$GETSTATUS\e[49m-| $GETLINK"	
+			echo -e "|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 500 ]; then
-			echo -e "|-\e[41m$GETSTATUS\e[49m-| $GETLINK"
+			echo -e "|-${redlabel}$GETSTATUS${default}-| $GETLINK"
 		elif [ $GETSTATUS -lt 600 ]; then
-			echo -e "|-\e[45m$GETSTATUS\e[49m-| $GETLINK"
+			echo -e "|-${magentalabel}$GETSTATUS${default}-| $GETLINK"
 		else
 			echo "Unknow option..."
 		fi
@@ -245,10 +261,10 @@ function printReports {
 	echo "Total link's STATUS"
 	echo "===================" 
 	if [ "$report" == "terminal" ]; then
-		echo -e "\e[42m$STATUS_SUCCESS\e[49m Success links" 
-		echo -e "\e[43m$STATUS_REDIRECT\e[49m Redirection links" 
-		echo -e "\e[41m$STATUS_CLIENT_ERROR\e[49m Client error links" 
-		echo -e "\e[45m$STATUS_SERVER_ERROR\e[49m Server error links"
+		echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
+		echo "${yellowlabel}$STATUS_REDIRECT${default} Redirection links" 
+		echo "${redlabel}$STATUS_CLIENT_ERROR${default} Client error links" 
+		echo "${magentalabel}$STATUS_SERVER_ERROR${default} Server error links"
 		echo "Total link's validity: $TOTAL_VALIDITY%"
 	else
 		echo "$STATUS_SUCCESS Success links" 
