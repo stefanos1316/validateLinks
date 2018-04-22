@@ -102,7 +102,7 @@ while true; do
 			esac ;;
 		-l|--link) LINK=true ;
 			case $2 in 
-				https://* | http://* | www*) LINK_ADDRESS=$2 ; shift 2 ;;
+				https* | http* | www*) LINK_ADDRESS=$2 ; shift 2 ;;
 				*) >&2 echo "[Error] ULR address was not provided" ; shift 2;;
 			esac ;;
 		-p|--passing) PASSING=true ; shift ;;
@@ -120,47 +120,6 @@ STATUS_SUCCESS=0
 STATUS_REDIRECT=0
 STATUS_CLIENT_ERROR=0
 STATUS_SERVER_ERROR=0
-
-#exit
-# Get all arguments
-#args=("$@") 
-
-# Get number of elements 
-#ELEMENTS=${#args[@]} 
-
-# Initiallize parameters
-#report="0"
-#debugging="0"
-#LINK="0"
-#DIR="0"
-#REPO="0"
-
-
-# echo each element in array  
-# for lQsds
-#for (( i=0;i<$ELEMENTS;++i)); do  
-
-#	case "${args[${i}]}" in 
-#	("--report") report=${args[i+1]} ;;
-#	("--dir") DIR=${args[i+1]} ;;
-#	("--link") LINK=${args[i+1]} ;;
-#	("--repository") REPO=${args[i+1]} ;;
-#	("--debug") debugging="1" ;;
-#	esac
-#done
-
-#if [ "$report" != "terminal" -a "$report" != "email" ]; then
-#	echo 
-#	>&2 echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
-#	echo 
-#	exit
-#fi
-
-# If both LINK and DIR are give the count it as error
-#if [ "$LINK" != "0" -o "$DIR" != "0" -a "$REPO" != "0" ]; then
-#	>&2 echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
-#	exit
-#fi
 
 # Function declarations
 function depth {
@@ -224,11 +183,7 @@ while read LINE; do
    URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
  
    if [[ ${URL} != *"|000|"* ]]; then 
-   	#if [ "$report" == "terminal" ]; then
-		printForTerminal "$URL"
-   	#else
-   	#	echo $URL
-   	#fi 
+	printForTerminal "$URL"
 	increaseStatus $URL
    fi 	
 done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
@@ -259,11 +214,7 @@ function getLinksFromLink {
 while  read LINE; do
 	URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
   	if [[ ${URL} != *"|000|"* ]]; then 
-		if [ "$report" == "terminal" ]; then
-        		printForTerminal "$URL"
-   		else
-        		echo $URL >> tmp/1.txt
-   		fi
+        	printForTerminal "$URL"
    		increaseStatus $URL
 	fi
 done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
@@ -336,8 +287,7 @@ function printReports {
 
 
 # If user didn't provide us with a directory or executable we search the current working directory
-if [ "${DIRECTORY}" = fasle  -a "${LINK}" = false ]; then
-	# Then check the CWD
+if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
 	for file in *
 	do
     		if [[ -f $file ]]; then
@@ -345,46 +295,13 @@ if [ "${DIRECTORY}" = fasle  -a "${LINK}" = false ]; then
     		fi
 	done
 else
-	if [ "${DIRECTORY}" = true ]; then
+	if [ ${DIRECTORY} = true ]; then
 		traverse $DIRECTORY_PATH 0
 	fi
-fi
 
-
-exit
-
-# If link is given instead of dir then call getLinksFromLink function
-if [ "$LINK" != "0" ]; then
-	getLinksFromLink $LINK
-fi
-
-# If repository option is provided then act accordingly
-if [ "$REPO" != "0" ]; then
-	getRepoLinks $REPO
-fi
-
-#if [[ -z "$DIR" ]] && [[ "$LINK" == "0" ]] ; then
-if [ "$DIR" != "0" ]; then 
-	if [ -z "$DIR" ]; then
-		if [ "$report" == "email" ]; then
-			traverse . 0 >> tmp/1.txt
-		else
-			traverse . 0 
-		fi
-	else
-		if [ "$report" == "email" ]; then
-			traverse $DIR 0 >> tmp/1.txt
-		else
-			traverse $DIR 0 
-		fi
+	if [ ${LINK} = true ]; then 
+		getLinksFromLink ${LINK_ADDRESS}
 	fi
 fi
 
-if [ "$report" == "email" ]; then
-	printReports >> tmp/top.txt
-	cat tmp/1.txt >> tmp/top.txt
-	mail -s "[LinksValidator] Status Report" sgeorgiou@aueb.gr < tmp/top.txt
-else	
-	printReports
-fi
 exit
