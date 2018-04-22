@@ -25,7 +25,7 @@ if [ "$#" -eq 0 ]; then
 	exit
 fi
 
-
+# Printing the manual page
 if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo 
 	echo ${bold}NAME${default}
@@ -38,6 +38,14 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo "	Performs links validation over a single web-page and identifies which links are broken and valide. Also, it can performe depth first search in a directory to validate all file's links. "
 	echo "	If no option is given it validates all links found in the current working directory"
 	echo
+	echo "	${bold}-d${default} ${underline}directory-path${default}, ${bold}--directory${default} ${underline}directory-path${default}"
+	echo
+	echo "		provide the related or absolute path towards a directory to perform an analysis on its files"
+	echo
+	echo "	${bold}-l${default} ${underline}URL-address${default}, ${bold}--link${default} ${underline}URL-address${default}"
+	echo
+	echo "		provide a URL link to perform analysis on it"
+	echo 
 	echo "	${bold}-p, --passing${default}"
 	echo
 	echo "		show all the links with response 2XX (Success)"
@@ -80,6 +88,10 @@ fi
 
 # Retrieve all command line arguments using getopts
 # Defining necessary variables
+DIRECTORY=false
+DIRECTORY_PATH=""
+LINK=false
+LINK_ADDRESS=""
 PASSING=false
 REDIRECTION=false
 CLIENTERROR=false
@@ -88,10 +100,20 @@ VERSION=false
 STATISTICS=false
 
 # If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
-OPTIONS=`getopt -o prcsvS --long passing,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
+OPTIONS=`getopt -o d:l:prcsvS --long directory:,link:,passing,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
 eval set -- "$OPTIONS"
 while true; do
 	case "$1" in 
+		-d|--directory) DIRECTORY=true ;
+			case $2 in 
+				*/*) DIRECTORY_PATH=$2 ; shift 2 ;;
+				*) >&2 echo "[Error] Directory path was not provided." ; shift 2 ;;
+			esac ;;
+		-l|--link) LINK=true ;
+			case $2 in 
+				https://* | http://* | www*) LINK_ADDRESS=$2 ; shift 2 ;;
+				*) >&2 echo "[Error] ULR address was not provided" ; shift 2;;
+			esac ;;
 		-p|--passing) PASSING=true ; shift ;;
 		-r|--redirection) REDIRECTION=true ; shift ;;
 		-c|--clientError) CLIENTERROR=true ; shift ;;
@@ -103,58 +125,51 @@ while true; do
 	esac
 done
 
-echo "Testing phase"
-
-echo "-p is ${PASSING}"
-echo "-r is ${REDIRECTION}"
-echo "-c is ${CLIENTERROR}"
-echo "-s is ${SERVERERROR}"
-echo "-S is ${STATISTICS}"
-
-exit
-# Get all arguments
-args=("$@") 
-
-# Get number of elements 
-ELEMENTS=${#args[@]} 
-
-# Initiallize parameters
-report="0"
-debugging="0"
-LINK="0"
-DIR="0"
-REPO="0"
-
 STATUS_SUCCESS=0
 STATUS_REDIRECT=0
 STATUS_CLIENT_ERROR=0
 STATUS_SERVER_ERROR=0
 
+#exit
+# Get all arguments
+#args=("$@") 
+
+# Get number of elements 
+ELEMENTS=${#args[@]} 
+
+# Initiallize parameters
+#report="0"
+#debugging="0"
+#LINK="0"
+#DIR="0"
+#REPO="0"
+
+
 # echo each element in array  
 # for lQsds
-for (( i=0;i<$ELEMENTS;++i)); do  
+#for (( i=0;i<$ELEMENTS;++i)); do  
 
-	case "${args[${i}]}" in 
-	("--report") report=${args[i+1]} ;;
-	("--dir") DIR=${args[i+1]} ;;
-	("--link") LINK=${args[i+1]} ;;
-	("--repository") REPO=${args[i+1]} ;;
-	("--debug") debugging="1" ;;
-	esac
-done
+#	case "${args[${i}]}" in 
+#	("--report") report=${args[i+1]} ;;
+#	("--dir") DIR=${args[i+1]} ;;
+#	("--link") LINK=${args[i+1]} ;;
+#	("--repository") REPO=${args[i+1]} ;;
+#	("--debug") debugging="1" ;;
+#	esac
+#done
 
-if [ "$report" != "terminal" -a "$report" != "email" ]; then
-	echo 
-	>&2 echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
-	echo 
-	exit
-fi
+#if [ "$report" != "terminal" -a "$report" != "email" ]; then
+#	echo 
+#	>&2 echo "Wrong command line parameters, please revise and execute again or read execution information (--help option)"
+#	echo 
+#	exit
+#fi
 
 # If both LINK and DIR are give the count it as error
-if [ "$LINK" != "0" -o "$DIR" != "0" -a "$REPO" != "0" ]; then
-	>&2 echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
-	exit
-fi
+#if [ "$LINK" != "0" -o "$DIR" != "0" -a "$REPO" != "0" ]; then
+#	>&2 echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
+#	exit
+#fi
 
 # Function declarations
 function depth {
@@ -327,6 +342,13 @@ function printReports {
 		echo "======================"
 	fi 
 }
+
+
+# If user didn't provide us with a directory or executable we search the current working directory
+
+
+
+exit
 
 # If link is given instead of dir then call getLinksFromLink function
 if [ "$LINK" != "0" ]; then
