@@ -16,15 +16,6 @@ magentalabel=$(tput setab 4)
 default=$(tput sgr0)
 
 
-# This tool can be used in a terminal or as a GitHub webhook to provide reports.
-if [ "$#" -eq 0 ]; then
-	echo ""
-	echo "Illegal number of command line arguments!"
-	echo "Use --help for more information."
-	echo ""
-	exit
-fi
-
 # Printing the manual page
 if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo 
@@ -135,7 +126,7 @@ STATUS_SERVER_ERROR=0
 #args=("$@") 
 
 # Get number of elements 
-ELEMENTS=${#args[@]} 
+#ELEMENTS=${#args[@]} 
 
 # Initiallize parameters
 #report="0"
@@ -233,11 +224,11 @@ while read LINE; do
    URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
  
    if [[ ${URL} != *"|000|"* ]]; then 
-   	if [ "$report" == "terminal" ]; then
+   	#if [ "$report" == "terminal" ]; then
 		printForTerminal "$URL"
-   	else
-   		echo $URL
-   	fi 
+   	#else
+   	#	echo $URL
+   	#fi 
 	increaseStatus $URL
    fi 	
 done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
@@ -345,7 +336,19 @@ function printReports {
 
 
 # If user didn't provide us with a directory or executable we search the current working directory
-
+if [ "${DIRECTORY}" = fasle  -a "${LINK}" = false ]; then
+	# Then check the CWD
+	for file in *
+	do
+    		if [[ -f $file ]]; then
+			getLinkStatus $file
+    		fi
+	done
+else
+	if [ "${DIRECTORY}" = true ]; then
+		traverse $DIRECTORY_PATH 0
+	fi
+fi
 
 
 exit
