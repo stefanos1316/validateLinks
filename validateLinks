@@ -58,7 +58,7 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		output version information and exit"
 	echo
-	echo "	${bold-o, --overall${default}}"
+	echo "	${bold}-S, --statistics${default}"
 	echo
 	echo "		output statistics based on the collected results"
 	echo 
@@ -66,12 +66,15 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		display this help list and exit"
 	echo
-	echo "--report <terminal,email> 		Select if you wish the reporting to done on terminal or through e-mails."		 
-	echo "--dir <path>				Provide related path of a directory"
-	echo "--link <given link>			This option is not allowed if a --dir i given."
-	echo "--repository <repo's link> 		Provide the link of the repo to be analyzed."
-	echo "--debug					Enable debug mode (printing messages)"
+	echo "${bold}AUTHOR${default}"
+	echo "	Written by Stefanos I. Georgiou"
 	echo 
+	echo "${bold}REPORTING BUGS${default}"
+	echo
+	echo "${bold}COPYRIGHT${default}"
+	echo
+	echo "${bold}SEE ALSO${default}"
+
 	exit
 fi
 
