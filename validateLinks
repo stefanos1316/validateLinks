@@ -78,8 +78,40 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	exit
 fi
 
-# Retrieve all command line arguments
+# Retrieve all command line arguments using getopts
+# Defining necessary variables
+PASSING=false
+REDIRECTION=false
+CLIENTERROR=false
+SERVERERROR=false
+VERSION=false
+STATISTICS=false
 
+# If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
+OPTIONS=`getopt -o prcsvS --long passing,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
+eval set -- "$OPTIONS"
+while true; do
+	case "$1" in 
+		-p|--passing) PASSING=true ; shift ;;
+		-r|--redirection) REDIRECTION=true ; shift ;;
+		-c|--clientError) CLIENTERROR=true ; shift ;;
+		-s|--serverError) SERVERERROR=true ; shift ;;
+		-v|--version) VERSION=true ; shift ;;
+		-S|--statistics) STATISTICS=true; shift ;;
+		--) shift ; break ;;
+		*) >&2 echo "Wrong command line argument, please try again." ; exit 1 ;;
+	esac
+done
+
+echo "Testing phase"
+
+echo "-p is ${PASSING}"
+echo "-r is ${REDIRECTION}"
+echo "-c is ${CLIENTERROR}"
+echo "-s is ${SERVERERROR}"
+echo "-S is ${STATISTICS}"
+
+exit
 # Get all arguments
 args=("$@") 
 
@@ -122,13 +154,6 @@ fi
 if [ "$LINK" != "0" -o "$DIR" != "0" -a "$REPO" != "0" ]; then
 	>&2 echo "You  are not allowed to give a --dir, --link, and --repository options at the same time, please try again"
 	exit
-fi
-
-
-# Create tmp directories to store results which later on will be push as an email notifications to the user
-if [ "$report" = "email" ]; then
-	rm -rf tmp
-	mkdir tmp
 fi
 
 # Function declarations
