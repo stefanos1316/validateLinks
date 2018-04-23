@@ -109,12 +109,12 @@ while true; do
 				https* | http* | www*) LINK_ADDRESS=$2 ; shift 2 ;;
 				*) >&2 echo "[Error] ULR address was not provided" ; shift 2;;
 			esac ;;
-		-p|--passing) PASSING=true ; shift ;;
-		-r|--redirection) REDIRECTION=true ; shift ;;
-		-c|--clientError) CLIENTERROR=true ; shift ;;
-		-s|--serverError) SERVERERROR=true ; shift ;;
+		-P|--passing) PASSING=true ; shift ;;
+		-R|--redirection) REDIRECTION=true ; shift ;;
+		-C|--clientError) CLIENTERROR=true ; shift ;;
+		-S|--serverError) SERVERERROR=true ; shift ;;
 		-v|--version) VERSION=true ; shift ;;
-		-S|--statistics) STATISTICS=true; shift ;;
+		-s|--statistics) STATISTICS=true; shift ;;
 		--) shift ; break ;;
 		*) >&2 echo "Wrong command line argument, please try again." ; exit 1 ;;
 	esac
