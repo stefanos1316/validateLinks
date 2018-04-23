@@ -37,7 +37,7 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		provide a URL link to perform analysis on it"
 	echo 
-	echo "	${bold}-p, --passing${default}"
+	echo "	${bold}-P, --passing${default}"
 	echo
 	echo "		show all the links with response 2XX (Success)"
 	echo
@@ -49,11 +49,11 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		show all the links with response 3XX (Redirection)"
 	echo
-	echo "	${bold}-c, --clientError${default}"
+	echo "	${bold}-C, --clientError${default}"
 	echo 
 	echo "		show all the links with response 4XX (Client Error)"
 	echo
-	echo "	${bold}-s, --serverError${default}"
+	echo "	${bold}-S, --serverError${default}"
 	echo
 	echo "		show all the links with response 5XX (Server Error)"
 	echo
@@ -61,7 +61,7 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		output version information and exit"
 	echo
-	echo "	${bold}-S, --statistics${default}"
+	echo "	${bold}-s, --statistics${default}"
 	echo
 	echo "		output statistics based on the collected results"
 	echo 
@@ -95,7 +95,7 @@ VERSION=false
 STATISTICS=false
 
 # If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
-OPTIONS=`getopt -o d:l:prcsvS --long directory:,link:,passing,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
+OPTIONS=`getopt -o d:l:PRrCSvs --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
 eval set -- "$OPTIONS"
 while true; do
 	case "$1" in 
@@ -149,14 +149,9 @@ function traverse {
 			echo Directory: $1/$i
 			traverse "$1/$i" `expr $2 + 1`
 		else
-			echo "---------------------------------------------------------------------" 
-			echo File: $1/$i 
-			# Calling function to check the status of the $i file's link 
-			if [ "$report" = "email" ]; then
-				getLinkStatus $1/$i >> tmp/1.txt
-			else
-				getLinkStatus $1/$i
-			fi
+			#echo "---------------------------------------------------------------------" 
+			echo FILE: $1/$i 
+			getLinkStatus $1/$i
 		fi
 	done< <(ls "$1")
 }
@@ -168,13 +163,13 @@ function printForTerminal {
 	# Adding the color for invisible mode to make an awesome printing
  	if [ ! -z $GETSTATUS ]; then 
 		if [ $GETSTATUS -lt 300 ]; then
-			echo -e "|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
+			echo -e "	|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 400 ]; then
-			echo -e "|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
+			echo -e "	|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 500 ]; then
-			echo -e "|-${redlabel}$GETSTATUS${default}-| $GETLINK"
+			echo -e "	|-${redlabel}$GETSTATUS${default}-| $GETLINK"
 		elif [ $GETSTATUS -lt 600 ]; then
-			echo -e "|-${magentalabel}$GETSTATUS${default}-| $GETLINK"
+			echo -e "	|-${magentalabel}$GETSTATUS${default}-| $GETLINK"
 		else
 			echo "Unknow option..."
 		fi
@@ -185,10 +180,35 @@ function getLinkStatus {
 
 while read LINE; do
    URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
- 
+
    if [[ ${URL} != *"|000|"* ]]; then 
-	printForTerminal "$URL"
-	increaseStatus $URL
+	if [ ${PASSING} = true ] && [[ ${URL} != *"|000|"* ]] ; then 
+		if [[ ${URL} == *"|2"*"|"* ]]; then
+			printForTerminal "$URL"
+			increaseStatus $URL
+		fi
+	fi
+	if [ ${REDIRECTION} = true ]; then 
+		if [[ ${URL} == *"|3"*"|"* ]]; then
+			printForTerminal "$URL"
+			increaseStatus $URL
+		fi
+	fi
+	if [ ${CLIENTERROR} = true ]; then 
+		if [[ ${URL} == *"|4"*"|"* ]]; then
+			printForTerminal "$URL"
+			increaseStatus $URL
+		fi
+	fi
+	if [ ${SERVERERROR} = true ]; then 
+		if [[ ${URL} == *"|5"*"|"* ]]; then
+			printForTerminal "$URL"
+			increaseStatus $URL
+		fi
+	fi
+  # else
+#	printForTerminal "$URL"
+#	increaseStatus $URL
    fi 	
 done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
@@ -225,38 +245,6 @@ done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 
 
 }
 
-
-function getRepoLinks {
-	
-	REPO=$1
-
-	# If the user gave / ending then remove it
-	if [[ "$REPO" =~ '/'$ ]]; then
-        	REPO=$(echo $REPO | sed 's/\/$//g')
-	fi
-
-	# If a user gave .git ending then remove it
-	if [[ "$REPO" =~ '.git'$ ]]; then
-        	REPO=$(echo $REPO | sed 's/\.git$//g')
-	fi
-
-	#Clone repo and mv it in a temp file, that is cloned_repo
-	if [ -d "cloned_repo" ]; then
-        	rm -rf cloned_repo/*
-	else	
-		mkdir cloned_repo
-	fi
-
-
-	source "spinner.sh"
-	start_spinner 'Cloning repository...'
-	git clone $REPO
-	stop_spinner $?
-
-	REPO_NAME=$(echo $REPO | awk -F"/" '{print $5}')
-	mv $REPO_NAME cloned_repo
-
-}
 
 function printReports {
 
@@ -306,6 +294,10 @@ else
 	if [ ${LINK} = true ]; then 
 		getLinksFromLink ${LINK_ADDRESS}
 	fi
+fi
+
+if [ ${STATISTICS} =true ]; then
+	printReports
 fi
 
 exit
