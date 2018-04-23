@@ -41,7 +41,11 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo
 	echo "		show all the links with response 2XX (Success)"
 	echo
-	echo "	${bold}-r, --redirection${default}"
+	echo "	${bold}-r, --recurive${default}"
+	echo
+	echo "		recursivily traverse all directories and analyses all file's links"
+	echo
+	echo "	${bold}-R, --redirection${default}"
 	echo
 	echo "		show all the links with response 3XX (Redirection)"
 	echo
