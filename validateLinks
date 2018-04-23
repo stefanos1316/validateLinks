@@ -12,7 +12,7 @@ underline=$(tput smul)
 redlabel=$(tput setab 1)
 greenlabel=$(tput setab 2)
 yellowlabel=$(tput setab 3)
-magentalabel=$(tput setab 4)
+bluelabel=$(tput setab 4)
 default=$(tput sgr0)
 
 
@@ -89,6 +89,7 @@ LINK=false
 LINK_ADDRESS=""
 PASSING=false
 REDIRECTION=false
+RECURSIVE=false
 CLIENTERROR=false
 SERVERERROR=false
 VERSION=false
@@ -110,6 +111,7 @@ while true; do
 				*) >&2 echo "[Error] ULR address was not provided" ; shift 2;;
 			esac ;;
 		-P|--passing) PASSING=true ; shift ;;
+		-r|--recursive) RECURSIVE=true ; shift ;;
 		-R|--redirection) REDIRECTION=true ; shift ;;
 		-C|--clientError) CLIENTERROR=true ; shift ;;
 		-S|--serverError) SERVERERROR=true ; shift ;;
@@ -131,7 +133,7 @@ function depth {
 	#Do a small depth checking how deep into the tree we are
 	k=0
 	while [ $k -lt $1 ]; do
-		echo -n " "
+		echo -n 
 		let k++
 	done
 }
@@ -146,7 +148,7 @@ function traverse {
 		if [ -d "$1/$i" ]
 		then
 			echo "=====================================================================" 
-			echo Directory: $1/$i
+			echo ${bold}DIRECTORY${default}: $1/$i
 			traverse "$1/$i" `expr $2 + 1`
 		else
 			#echo "---------------------------------------------------------------------" 
@@ -169,7 +171,7 @@ function printForTerminal {
 		elif [ $GETSTATUS -lt 500 ]; then
 			echo -e "	|-${redlabel}$GETSTATUS${default}-| $GETLINK"
 		elif [ $GETSTATUS -lt 600 ]; then
-			echo -e "	|-${magentalabel}$GETSTATUS${default}-| $GETLINK"
+			echo -e "	|-${bluelabel}$GETSTATUS${default}-| $GETLINK"
 		else
 			echo "Unknow option..."
 		fi
@@ -206,9 +208,11 @@ while read LINE; do
 			increaseStatus $URL
 		fi
 	fi
-  # else
-#	printForTerminal "$URL"
-#	increaseStatus $URL
+	if [ ${PASSING} != true -a ${REDIRECTION} != true -a ${CLIENTERROR} != true -a ${SERVERERROR} != true ]; then
+                printForTerminal "$URL"
+        	increaseStatus $URL
+        fi	
+
    fi 	
 done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
@@ -256,25 +260,11 @@ function printReports {
 	echo "Preparing reports"
 	echo "Total link's STATUS"
 	echo "===================" 
-	if [ "$report" == "terminal" ]; then
-		echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
-		echo "${yellowlabel}$STATUS_REDIRECT${default} Redirection links" 
-		echo "${redlabel}$STATUS_CLIENT_ERROR${default} Client error links" 
-		echo "${magentalabel}$STATUS_SERVER_ERROR${default} Server error links"
-		echo "Total link's validity: $TOTAL_VALIDITY%"
-	else
-		echo "$STATUS_SUCCESS Success links" 
-		echo "$STATUS_REDIRECT Redirection links" 
-		echo "$STATUS_CLIENT_ERROR Client error links" 
-		echo "$STATUS_SERVER_ERROR Server error links"
-		echo "Total link's validity: $TOTAL_VALIDITY%"
-	fi
-	
-	if [ "$report" =  "email" ]; then
-		echo " " 
-		echo "[Logs] Detailed report" 
-		echo "======================"
-	fi 
+	echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
+	echo "${yellowlabel}$STATUS_REDIRECT${default} Redirection links" 
+	echo "${redlabel}$STATUS_CLIENT_ERROR${default} Client error links" 
+	echo "${bluelabel}$STATUS_SERVER_ERROR${default} Server error links"
+	echo "Total link's validity: $TOTAL_VALIDITY%"
 }
 
 
@@ -287,8 +277,18 @@ if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
     		fi
 	done
 else
-	if [ ${DIRECTORY} = true ]; then
+	if [ ${DIRECTORY} = true -a ${RECURSIVE} = true ]; then
 		traverse $DIRECTORY_PATH 0
+
+	else
+		for file in `ls ${DIRECTORY_PATH}`
+        	do
+			PATH_FILE="${DIRECTORY_PATH}/${file}"
+                	if [[ -f $PATH_FILE ]]; then
+                        	echo FILE: $PATH_FILE
+				getLinkStatus $PATH_FILE
+                	fi
+        	done
 	fi
 
 	if [ ${LINK} = true ]; then 
@@ -296,7 +296,7 @@ else
 	fi
 fi
 
-if [ ${STATISTICS} =true ]; then
+if [ ${STATISTICS} = true ]; then
 	printReports
 fi
 
