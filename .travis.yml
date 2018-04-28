@@ -6,7 +6,8 @@ install:
 - brew install lynx
 script: 
 - chmod +x validateLinks
-- ./validateLinks -l https://www.balab.aueb.gr/ -s
+- bash validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
 - ls -l
-- ./validateLinks -d courses/courses -r -s
+- sh validateLinks -d courses/courses -r -s
+- lynx https://github.com/stefanos1316/courses
