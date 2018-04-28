@@ -3,7 +3,7 @@ language: bash
 os: osx
 
 install:
-- sudo brew install lynx
+- brew install lynx
 script: 
 - bash validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
