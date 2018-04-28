@@ -9,5 +9,5 @@ script:
 - bash validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
 - ls -l
-- sh validateLinks -d courses/courses -r -s
-- lynx https://github.com/stefanos1316/courses
+- bash validateLinks -d courses/courses -r -s
+- lynx https://www.facebook.com
