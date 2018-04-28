@@ -8,4 +8,5 @@ install:
 script: 
 - bash validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
+- ls -l
 - bash validateLinks -d courses/ -r -s
