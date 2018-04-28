@@ -73,10 +73,12 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo "	Written by Stefanos I. Georgiou"
 	echo 
 	echo "${bold}REPORTING BUGS${default}"
+	echo "	Report validateLinks translation bugs to <https://github.com/stefanos1316/validateLinks/issues>"
 	echo
 	echo "${bold}COPYRIGHT${default}"
+	echo "	Copyright © 2017 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
+        echo "	This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law."
 	echo
-	echo "${bold}SEE ALSO${default}"
 
 	exit
 fi
@@ -214,7 +216,7 @@ while read LINE; do
         fi	
 
    fi 	
-done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',' | tr -d '"' | tr -d ')' | tr -d '(' | tr -d ';' | sed 's/\.$//' | sed 's/>.*//' | uniq )
+done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',")(;}*' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
 
 function increaseStatus {
@@ -246,7 +248,6 @@ while  read LINE; do
    		increaseStatus $URL
 	fi
 done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
-
 }
 
 
@@ -256,8 +257,8 @@ function printReports {
 	TOTAL=$((STATUS_SUCCESS+STATUS_REDIRECT+STATUS_CLIENT_ERROR+STATUS_SERVER_CLIENT))
 	TOTAL_VALIDITY=$(echo "scale=2; ((($STATUS_SUCCESS + $STATUS_REDIRECT)) / $TOTAL) * 100" | bc)
 	
-	echo ""
-	echo "Preparing reports"
+	echo 
+	echo 
 	echo "Total link's STATUS"
 	echo "===================" 
 	echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
