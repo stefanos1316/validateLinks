@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/stefanos1316/validateLinks.svg?branch=master)](https://travis-ci.org/stefanos1316/validateLinks)
+[![GPL Licence](https://badges.frapsoft.com/os/gpl/gpl.png?v=103)](https://opensource.org/licenses/GPL-3.0/)
 
 # About validateLinks
 
