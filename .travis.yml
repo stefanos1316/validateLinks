@@ -6,5 +6,6 @@ dist: trusty
 install:
 - sudo apt-get install lynx mailutils
 script: 
-- bash validateLinks --report terminal --repository https://github.com/stefanos1316/my_curriculum_vitae.git
-- echo "Done with testing1" |mail -s "[Travis-CI] Test" sgeorgiou@aueb.gr
+- bash validateLinks -l https://www.balab.aueb.gr/ -s
+- git clone https://github.com/stefanos1316/courses
+- bash validateLinks -d courses -r -s
