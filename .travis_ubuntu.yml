@@ -1,10 +1,10 @@
 language: bash
 
 sudo: required
-dist: OSX
+dist: trusty
 
 install:
-- sudo port install lynx
+- sudo apt-get install lynx mailutils
 script: 
 - bash validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
