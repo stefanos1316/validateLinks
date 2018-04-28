@@ -5,7 +5,8 @@ os: osx
 install:
 - brew install lynx
 script: 
-- bash validateLinks -l https://www.balab.aueb.gr/ -s
+- chmod +x validateLinks
+- ./validateLinks -l https://www.balab.aueb.gr/ -s
 - git clone https://github.com/stefanos1316/courses
 - ls -l
-- bash validateLinks -d courses/courses -r -s
+- ./validateLinks -d courses/courses -r -s
