@@ -1,7 +1,6 @@
 language: bash
 
-sudo: required
-dist: OSX
+os: osx
 
 install:
 - sudo port install lynx
