@@ -36,7 +36,7 @@ if [ "$1" == "-h" -o "$1" == "--help" ]; then
 	echo "	${bold}-l${default} ${underline}URL-address${default}, ${bold}--link${default} ${underline}URL-address${default}"
 	echo
 	echo "		provide a URL link to perform analysis on it"
-	echo 
+	echo
 	echo "	${bold}-P, --passing${default}"
 	echo
 	echo "		show all the links with response 2XX (Success)"
@@ -267,7 +267,6 @@ function printReports {
 	echo "${bluelabel}$STATUS_SERVER_ERROR${default} Server error links"
 	echo "Total link's validity: $TOTAL_VALIDITY%"
 }
-
 
 # If user didn't provide us with a directory or executable we search the current working directory
 if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
