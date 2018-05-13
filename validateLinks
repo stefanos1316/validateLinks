@@ -6,7 +6,17 @@
 # In the final report, we consider the links with HTTP status from 200-400 as valid.
 
 
-# Text fonts
+# Text fonts for Linux distros
+bold=$(tput bold)
+underline=$(tput smul)
+redlabel=$(tput setab 1)
+greenlabel=$(tput setab 2)
+yellowlabel=$(tput setab 3)
+bluelabel=$(tput setab 4)
+default=$(tput sgr0)
+
+
+# Text fonts for Mac OSX
 bold=$(tput bold)
 underline=$(tput smul)
 redlabel=$(tput setab 1)
