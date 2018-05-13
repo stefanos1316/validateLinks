@@ -5,9 +5,7 @@ os: osx
 install:
 - brew install lynx
 script: 
-- chmod +x validateLinks
-- bash validateLinks -l https://www.balab.aueb.gr/ -s
-- git clone https://github.com/stefanos1316/courses
-- ls -l
-- bash validateLinks -d courses/courses -r -s
-- lynx https://www.facebook.com
+- echo "export TERM='xterm-color'" >> ~/.bash_profile
+- echo "export PS1='\[\e[0;33m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\]\$'" >> ~/.bash_profile
+- source ~/..bash_profile
+
