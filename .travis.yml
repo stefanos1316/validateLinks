@@ -10,3 +10,4 @@ script:
 - source ~/.bash_profile
 - echo "Testing this on Mac OSX"
 - echo -e "\e[31mHello World\e[0m"
+- echo -e "\[\e[0;31m\]"
