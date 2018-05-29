@@ -25,9 +25,6 @@ yellowlabel=$(tput setab 3)
 bluelabel=$(tput setab 4)
 default=$(tput sgr0)
 
-echo "Testing this on Mac OSX"
-echo -e "\e[31mHello World\e[0m"
-
 
 # Printing the manual page
 if [ "$1" == "-h" -o "$1" == "--help" ]; then
