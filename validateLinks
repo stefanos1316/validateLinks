@@ -47,6 +47,10 @@ if [ "$1" == "-h" -o "$1" == "--help" -o  $# -eq 0 ]; then
 	echo
 	echo "		provide a URL link to perform analysis on it"
 	echo
+	echo "	${bold}-o${default} ${underline}filename${default}, ${bold}--output${default} ${underline}output${default}"
+	echo
+	echo "		provide a file name to store the execution's output"
+	echo
 	echo "	${bold}-P, --passing${default}"
 	echo
 	echo "		show all the links with response 2XX (Success)"
@@ -106,9 +110,11 @@ CLIENTERROR=false
 SERVERERROR=false
 VERSION=false
 STATISTICS=false
+OUTPUT=false
+OUTPUT_DIR_NAME=""
 
 # If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
-OPTIONS=`getopt -o d:l:PRrCSvs --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics -n 'validateLinks' -- "$@"`
+OPTIONS=`getopt -o d:l:PRrCSvso: --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics,output: -n 'validateLinks' -- "$@"`
 eval set -- "$OPTIONS"
 while true; do
 	case "$1" in 
@@ -129,6 +135,7 @@ while true; do
 		-S|--serverError) SERVERERROR=true ; shift ;;
 		-v|--version) VERSION=true ; shift ;;
 		-s|--statistics) STATISTICS=true; shift ;;
+		-o|--output) OUTPUT=true ; OUTPUT_DIR_NAME=$2 ; shift 2 ;;
 		--) shift ; break ;;
 		*) >&2 echo "Wrong command line argument, please try again." ; exit 1 ;;
 	esac
@@ -283,31 +290,52 @@ if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
 	for file in *
 	do
     		if [[ -f $file ]]; then
-			getLinkStatus $file
-    		fi
+			if [ ${OUTPUT} ]; then
+				getLinkStatus $file >> ${OUTPUT_DIR_NAME}	
+			else
+				getLinkStatus $file
+    			fi
+		fi
 	done
 else
 	if [ ${DIRECTORY} = true -a ${RECURSIVE} = true ]; then
-		traverse $DIRECTORY_PATH 0
-
+			if [ ${OUTPUT} ]; then
+				traverse $DIRECTORY_PATH 0 >> ${OUTPUT_DIR_NAME}	
+			else
+				traverse $DIRECTORY_PATH 0
+			fi
 	else
 		for file in `ls ${DIRECTORY_PATH}`
         	do
 			PATH_FILE="${DIRECTORY_PATH}/${file}"
                 	if [[ -f $PATH_FILE ]]; then
-                        	echo FILE: $PATH_FILE
-				getLinkStatus $PATH_FILE
-                	fi
+                        	if [ ${OUTPUT} ]; then
+					echo FILE: $PATH_FILE >> ${OUTPUT_DIR_NAME}
+					getLinkStatus $PATH_FILE >> ${OUTPUT_DIR_NAME}
+				else
+					echo FILE: $PATH_FILE
+					getLinkStatus $PATH_FILE
+				fi
+			fi
         	done
 	fi
 
 	if [ ${LINK} = true ]; then 
-		getLinksFromLink ${LINK_ADDRESS}
+		if [ ${OUTPUT} ]; then
+			getLinksFromLink ${LINK_ADDRESS} >> ${OUTPUT_DIR_NAME}
+		else
+			getLinksFromLink ${LINK_ADDRESS}
+	
+		fi
 	fi
 fi
 
 if [ ${STATISTICS} = true ]; then
-	printReports
+	if [ ${OUTPUT} ]; then
+		printReports >> ${OUTPUT_DIR_NAME}
+	else
+		printReports
+	fi
 fi
 
 exit
