@@ -1,0 +1,192 @@
+FILE: ../MSR_2018//acmart.bib
+	|-[42m200(B[m-|  http://identitystandards.acm.org
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/algorithm2e
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/algorithms
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/amslatex
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/booktabs
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/listings
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/nomencl
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/subcaption
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/textcase
+	|-[43m301(B[m-|  http://www.tex.ac.uk
+FILE: ../MSR_2018//acmart.cls
+	|-[43m301(B[m-|  https://doi.org/#1
+FILE: ../MSR_2018//acmart.dtx
+	|-[43m301(B[m-|  http://arxiv.org/hypertex/bibstyles/
+	|-[43m301(B[m-|  http://ccrma.stanford.edu/~jos/bayes/bayes.html
+	|-[43m301(B[m-|  http://ccrma.stanford.edu/~jos/bayes/bayes.pdf
+	|-[42m200(B[m-|  http://colorbrewer2.org/
+	|-[42m200(B[m-|  http://ctuning.org/ae/ppopp2016.html
+	|-[44m500(B[m-|  http://daprlab.com/ace/
+	|-[43m301(B[m-|  http://dl.acm.org/ccs.cfm
+	|-[43m301(B[m-|  https://doi.org/#1
+	|-[43m302(B[m-|  https://doi.org/10.13039/501100001809
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/1
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/12
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/13
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/138
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/19
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/36
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/4
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/5
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/5#issuecomment-272881329
+	|-[42m200(B[m-|  https://github.com/borisveytsman/acmart/issues/9
+	|-[42m200(B[m-|  https://tex.stackexchange.com
+	|-[42m200(B[m-|  https://tug.org/
+	|-[42m200(B[m-|  https://www.ctan.org/pkg/acmart
+	|-[43m301(B[m-|  http://tex.stackexchange.com/a/62318/5522
+	|-[43m301(B[m-|  http://tex.stackexchange.com/questions/117892/can-i-convert-a-string-to-catcode-11
+	|-[43m301(B[m-|  http://tex.stackexchange.com/questions/357265/using-titletoc-with-acm-acmart-style
+	|-[41m404(B[m-|  http://video.google.com/videoplay?docid=6528042696351994555
+	|-[43m301(B[m-|  http://www.acm.org/
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/amscls
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/amsfonts
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/amsmath
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/binhex
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/caption
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/cmap
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/cm-super
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/comment
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/draftwatermark
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/environ
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/etoolbox
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/fancyhdr
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/float
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/fontaxes
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/geometry
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/graphics
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/hyperref
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/ifluatex
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/ifxetex
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/inconsolata
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/libertine
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/manyfoot
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/microtype
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/mmap
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/ms
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/mweights
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/natbib
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/nccfoots
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/newtx
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/oberdiek
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/pdftex-def
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/refcount
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/setspace
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/textcase
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/totpages
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/trimspaces
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/upquote
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/url
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/xcolor
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/xkeyval
+	|-[43m302(B[m-|  http://www.ctan.org/pkg/xstring
+	|-[43m301(B[m-|  http://www.latex-project.org/lppl.txt
+	|-[43m301(B[m-|  http://www.orcid.org/
+FILE: ../MSR_2018//acmart.ins
+FILE: ../MSR_2018//ACM-Reference-Format.bbx
+	|-[42m200(B[m-|  https://github.com/plk/biblatex/issues/229
+FILE: ../MSR_2018//ACM-Reference-Format.bst
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/1534530.1534545
+	|-[43m301(B[m-|  https://doi.org/
+FILE: ../MSR_2018//ACM-Reference-Format.cbx
+FILE: ../MSR_2018//ACM-Reference-Format.dbx
+FILE: ../MSR_2018//changelog.txt
+	|-[41m403(B[m-|  http://spot.colorado.edu/~dixonj/
+	|-[42m200(B[m-|  http://www.michaelshell.org/
+FILE: ../MSR_2018//comment.cut
+FILE: ../MSR_2018//conclusion.tex
+FILE: ../MSR_2018//discussion.tex
+FILE: ../MSR_2018//edp18.aux
+FILE: ../MSR_2018//edp18.log
+FILE: ../MSR_2018//edp18.pdf
+FILE: ../MSR_2018//edp18.tex
+FILE: ../MSR_2018//IEEEtran.cls
+	|-[43m302(B[m-|  http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+	|-[43m302(B[m-|  http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/testflow
+	|-[43m302(B[m-|  http://www.ieee.org/
+	|-[43m301(B[m-|  http://www.latex-project.org/
+	|-[42m200(B[m-|  http://www.michaelshell.org/
+	|-[42m200(B[m-|  http://www.michaelshell.org/tex/ieeetran/
+FILE: ../MSR_2018//introduction.tex
+FILE: ../MSR_2018//Makefile
+FILE: ../MSR_2018//methodology.tex
+FILE: ../MSR_2018//README.md
+FILE: ../MSR_2018//references.bib
+	|-[43m301(B[m-|  http://alarcos.esi.uclm.es/eseiw2016/megsus/home
+	|-[43m301(B[m-|  http://dl.acm.org/citation.cfm?id=41765.41801
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/1840845.1840883
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/1966445.1966460
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/1993498.1993518
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2168836.2168841
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2553070.2553077
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2593743.2593750
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2597073.2597085
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2597073.2597110
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2660193.2660235
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2695664.2695825
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2896967.2896968
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2901739.2901763
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/2950290.2983956
+	|-[43m301(B[m-|  http://doi.acm.org/10.1145/324133.324234
+	|-[41m404(B[m-|  http://enviroinfo2016.org/sessions/energy-aware-software-engineering-and-development/
+	|-[43m301(B[m-|  http://ercim-news.ercim.eu/en92/special/powerapi-a-software-library-to-monitor-the-energy-consumed-at-the-process-level
+	|-[43m302(B[m-|  http://gesi.org/smarter2020
+	|-[42m200(B[m-|  http://greens.cs.vu.nl/
+	|-[42m200(B[m-|  http://ict4s.org/
+	|-[43m301(B[m-|  http://joulemeter.software.informer.com/1.2/
+	|-[42m200(B[m-|  http://orbilu.uni.lu/handle/10993/29378
+	|-[42m200(B[m-|  http://rosettacode.org/wiki/Rosetta_Code
+	|-[41m404(B[m-|  https://01.org/blogs/tlcounts/2014/running-average-power-limit---rapl
+	|-[42m200(B[m-|  https://01.org/rapl-power-meter
+	|-[43m301(B[m-|  https://developer.android.com/ndk/index.html
+	|-[42m200(B[m-|  https://elinux.org/RPI_vcgencmd_usage
+	|-[42m200(B[m-|  https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
+	|-[42m200(B[m-|  https://github.com/acmeism/RosettaCodeData
+	|-[42m200(B[m-|  https://github.com/creationix/libco
+	|-[42m200(B[m-|  https://github.com/creationix/nvm
+	|-[43m301(B[m-|  https://github.com/groeck/lm-sensors
+	|-[42m200(B[m-|  https://github.com/pyrovski/watts-up
+	|-[41m404(B[m-|  https://github.com/stefanos1316/Rosetta_Code_Research_MSR/heatmaps
+	|-[41m404(B[m-|  https://github.com/stefanos1316/Rosetta_Code_Research_MSR/Scripts
+	|-[42m200(B[m-|  https://github.com/v8/v8/wiki/Design-Elements
+	|-[42m200(B[m-|  https://link.springer.com/chapter/10.1007/978-3-319-09967-5_10
+	|-[42m200(B[m-|  https://linux.die.net/man/1/strace
+	|-[42m200(B[m-|  https://linux.die.net/man/1/time
+	|-[42m200(B[m-|  https://pdfs.semanticscholar.org/7f7d/7e7d53febd451e263784b59c1c9038474499.pdf
+	|-[42m200(B[m-|  https://spectrum.ieee.org/computing/software/the-2017-top-programming-languages
+	|-[43m301(B[m-|  https://v8project.blogspot.com/2017/01/speeding-up-v8-regular-expressions.html
+	|-[42m200(B[m-|  https://www.cnet.com/products/dell-vostro-470-mt-core-i5-3450-3-1-ghz-4-gb-500-gb/specs/
+	|-[43m301(B[m-|  https://www.eia.gov/energyexplained/index.cfm?page=electricity_home
+	|-[42m200(B[m-|  https://www.microsoft.com/en-us/research/project/joulemeter-computational-energy-measurement-and-optimization/
+	|-[42m200(B[m-|  https://www.nrdc.org/resources/americas-data-centers-consuming-and-wasting-growing-amounts-energy
+	|-[42m200(B[m-|  https://www.raspberrypi.org/products/raspberry-pi-3-model-b/
+	|-[42m200(B[m-|  https://www.statista.com/statistics/274774/forecast-of-mobile-phone-users-worldwide/
+	|-[42m200(B[m-|  https://www.tiobe.com/tiobe-index/
+	|-[42m200(B[m-|  https://www.tiobe.com/tiobe-index/programming-languages-definition/
+	|-[42m200(B[m-|  http://web.eece.maine.edu/~vweaver/projects/rapl/rapl_support.html
+	|-[43m301(B[m-|  http://www1.la.dell.com/kn/en/corp/Desktops/vostro-470/pd.aspx?refid=vostro-470&s=corp
+	|-[42m200(B[m-|  http://www8.hp.com/us/en/products/laptops/product-detail.html?oid=7815294
+	|-[43m301(B[m-|  http://www.computerworld.com/article/2598562/data-center/data-centers-are-the-new-polluters.html
+	|-[43m301(B[m-|  http://www.openmp.org/
+	|-[42m200(B[m-|  http://www.sciencedirect.com/science/article/pii/S0164121216000777
+	|-[42m200(B[m-|  http://www.sciencedirect.com/science/article/pii/S1877750313000173
+	|-[42m200(B[m-|  http://ziyang.eecs.umich.edu/projects/powertutor/
+FILE: ../MSR_2018//related_work.tex
+FILE: ../MSR_2018//research_questions_1.tex
+FILE: ../MSR_2018//research_questions_2.tex
+FILE: ../MSR_2018//research_questions_3.tex
+FILE: ../MSR_2018//results.tex
+	|-[42m200(B[m-|  https://github.com/stefanos1316/Rosetta_Code_Research_MSR/tree/master/heatmaps
+FILE: ../MSR_2018//reviewers_comments.txt
+	|-[42m200(B[m-|  http://greenlab.di.uminho.pt/wp-content/uploads/2017/09/paperSLE.pdf
+	|-[43m301(B[m-|  http://ieeexplore.ieee.org/abstract/document/7393699/
+
+
+Total link's STATUS
+===================
+[42m52(B[m Success links
+[43m96(B[m Redirection links
+[41m6(B[m Client error links
+[44m1(B[m Server error links
+Total link's validity: 96.00%
