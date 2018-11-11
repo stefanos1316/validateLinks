@@ -197,6 +197,15 @@ function printForTerminal {
 		PRINTLINE=$(grep -in "${TRIMSPACE}" $2 | awk -F ":" '{print $1}')
 	fi
 
+	# If an output is specified then remove colors because they are not printed in a document
+	if [ ${OUTPUT} = true ]; then
+		greenlabel=""
+		redlabel=""
+		yellowlabel=""
+		bluelabel=""
+		default=""
+	fi
+
 	# Adding the color for invisible mode to make an awesome printing
  	if [ ! -z $GETSTATUS ]; then 
 		if [ $GETSTATUS -lt 300 ]; then

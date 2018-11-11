@@ -1,5 +1,5 @@
 # Implement the fonts functionallity for Mac OSX!
-# Implement file output operation.
-#  -> A replace must be done, since the colors are not depicted in the reports
+# Implement file output operation (DONE)
+#  -> A replace must be done, since the colors are not depicted in the reports (DONE)
 # Analyse the file output and show again info.
-# Implement task to show at which line of a document are the links located.
+# Implement task to show at which line of a document are the links located (DONE)
