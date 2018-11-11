@@ -71,6 +71,12 @@ if [ "$1" == "-h" -o "$1" == "--help" -o  $# -eq 0 ]; then
 	echo
 	echo "		show all the links with response 5XX (Server Error)"
 	echo
+	echo "	${bold}-i, --invalidLinksLocation${default}"
+	echo
+	echo "		show next to invalid link (we consider only 4XX-5XX) the number of line"
+	echo "		multiple blank lines with a number next to them, depicts the multiple appearance"
+	echo "		on the link located immediatly after the blank lines"
+	echo
 	echo "	${bold}-v, --version${default}"	
 	echo
 	echo "		output version information and exit"
@@ -112,32 +118,34 @@ VERSION=false
 STATISTICS=false
 OUTPUT=false
 OUTPUTFILE=""
+SHOWLINE=false
 
 # If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
-OPTIONS=`getopt -o d:l:PRrCSvso: --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics,output: -n 'validateLinks' -- "$@"`
+OPTIONS=`getopt -o d:l:PRrCSvso:i --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics,output:,linksLocation -n 'validateLinks' -- "$@"`
 eval set -- "$OPTIONS"
 while true; do
 	case "$1" in 
-		-d|--directory) DIRECTORY=true ;
+		-d|--directory) DIRECTORY=true;
 			case $2 in 
-				*/*) DIRECTORY_PATH=$2 ; shift 2 ;;
-				*) >&2 echo "[Error] Directory path was not provided." ; shift 2 ;;
-			esac ;;
-		-l|--link) LINK=true ;
+				*/*) DIRECTORY_PATH=$2; shift 2;;
+				*) >&2 echo "[Error] Directory path was not provided."; shift 2;;
+			esac;;
+		-l|--link) LINK=true;
 			case $2 in 
-				https* | http* | www*) LINK_ADDRESS=$2 ; shift 2 ;;
-				*) >&2 echo "[Error] ULR address was not provided" ; shift 2;;
+				https* | http* | www*) LINK_ADDRESS=$2; shift 2;;
+				*) >&2 echo "[Error] ULR address was not provided"; shift 2;;
 			esac ;;
-		-P|--passing) PASSING=true ; shift ;;
-		-r|--recursive) RECURSIVE=true ; shift ;;
-		-R|--redirection) REDIRECTION=true ; shift ;;
-		-C|--clientError) CLIENTERROR=true ; shift ;;
-		-S|--serverError) SERVERERROR=true ; shift ;;
-		-v|--version) VERSION=true ; shift ;;
-		-s|--statistics) STATISTICS=true; shift ;;
-		-o|--output) OUTPUT=true ; OUTPUTFILE=$2 ; shift 2 ;;
-		--) shift ; break ;;
-		*) >&2 echo "Wrong command line argument, please try again." ; exit 1 ;;
+		-P|--passing) PASSING=true; shift;;
+		-r|--recursive) RECURSIVE=true; shift;;
+		-R|--redirection) REDIRECTION=true; shift;;
+		-C|--clientError) CLIENTERROR=true; shift;;
+		-S|--serverError) SERVERERROR=true; shift;;
+		-v|--version) VERSION=true; shift;;
+		-s|--statistics) STATISTICS=true; shift;;
+		-o|--output) OUTPUT=true; OUTPUTFILE=$2; shift 2;;
+		-i|--linksLocation) SHOWLINE=true; shift;;
+		--) shift; break;;
+		*) >&2 echo "Wrong command line argument, please try again."; exit 1;;
 	esac
 done
 
@@ -178,19 +186,27 @@ function traverse {
 }
 
 function printForTerminal {
+	
 	GETSTATUS=$(echo $1 | awk -F "|" '{print $2}')
 	GETLINK=$(echo $1 | awk -F "|" '{print $3}')
+	TRIMSPACE=$(echo $GETLINK | tr -d '[:space:]')
+	PRINTLINE=""
+
+	# In SHOWLINKS is activated then print next to each link its location
+	if [ ${SHOWLINE} = true ]; then
+		PRINTLINE=$(grep -in "${TRIMSPACE}" $2 | awk -F ":" '{print $1}')
+	fi
 
 	# Adding the color for invisible mode to make an awesome printing
  	if [ ! -z $GETSTATUS ]; then 
 		if [ $GETSTATUS -lt 300 ]; then
-			echo -e "	|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
+			echo -e "${PRINTLINE}	|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 400 ]; then
-			echo -e "	|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
+			echo -e "${PRINTLINE}	|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
 		elif [ $GETSTATUS -lt 500 ]; then
-			echo -e "	|-${redlabel}$GETSTATUS${default}-| $GETLINK"
+			echo -e "${PRINTLINE}	|-${redlabel}$GETSTATUS${default}-| $GETLINK"
 		elif [ $GETSTATUS -lt 600 ]; then
-			echo -e "	|-${bluelabel}$GETSTATUS${default}-| $GETLINK"
+			echo -e "${PRINTLINE}	|-${bluelabel}$GETSTATUS${default}-| $GETLINK"
 		else
 			echo "Unknow option..."
 		fi
@@ -205,30 +221,30 @@ while read LINE; do
    if [[ ${URL} != *"|000|"* ]]; then 
 	if [ ${PASSING} = true ] && [[ ${URL} != *"|000|"* ]] ; then 
 		if [[ ${URL} == *"|2"*"|"* ]]; then
-			printForTerminal "$URL"
+			printForTerminal "$URL" "$1"
 			increaseStatus $URL
 		fi
 	fi
 	if [ ${REDIRECTION} = true ]; then 
 		if [[ ${URL} == *"|3"*"|"* ]]; then
-			printForTerminal "$URL"
+			printForTerminal "$URL" "$1"
 			increaseStatus $URL
 		fi
 	fi
 	if [ ${CLIENTERROR} = true ]; then 
 		if [[ ${URL} == *"|4"*"|"* ]]; then
-			printForTerminal "$URL"
+			printForTerminal "$URL" "$1"
 			increaseStatus $URL
 		fi
 	fi
 	if [ ${SERVERERROR} = true ]; then 
 		if [[ ${URL} == *"|5"*"|"* ]]; then
-			printForTerminal "$URL"
+			printForTerminal "$URL" "$1"
 			increaseStatus $URL
 		fi
 	fi
 	if [ ${PASSING} != true -a ${REDIRECTION} != true -a ${CLIENTERROR} != true -a ${SERVERERROR} != true ]; then
-                printForTerminal "$URL"
+                printForTerminal "$URL" "$1"
         	increaseStatus $URL
         fi	
 
