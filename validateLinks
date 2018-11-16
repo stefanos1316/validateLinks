@@ -71,9 +71,9 @@ if [ "$1" == "-h" -o "$1" == "--help" -o  $# -eq 0 ]; then
 	echo
 	echo "		show all the links with response 5XX (Server Error)"
 	echo
-	echo "	${bold}-i, --invalidLinksLocation${default}"
+	echo "	${bold}-i, --linksLocation${default}"
 	echo
-	echo "		show next to invalid link (we consider only 4XX-5XX) the number of line"
+	echo "		show the particular link's line number"
 	echo "		multiple blank lines with a number next to them, depicts the multiple appearance"
 	echo "		on the link located immediatly after the blank lines"
 	echo
@@ -315,7 +315,7 @@ if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
 	for file in *
 	do
     		if [[ -f $file ]]; then
-			if [ ${OUTPUT} ]; then
+			if [ ${OUTPUT} = true ]; then
 				getLinkStatus $file >> ${OUTPUTFILE}	
 			else
 				getLinkStatus $file
