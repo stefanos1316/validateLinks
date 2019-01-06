@@ -3,4 +3,4 @@
 #  -> A replace must be done, since the colors are not depicted in the reports (DONE)
 # Analyse the file output and show again info.
 # Implement task to show at which line of a document are the links located (DONE)
-# Make it possible for PDF files too.
+# Make it possible for PDF files too (use pdftotext pdfilfe - | grep ..)
