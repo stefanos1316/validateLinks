@@ -324,7 +324,7 @@ if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
 	done
 else
 	if [ ${DIRECTORY} = true -a ${RECURSIVE} = true ]; then
-			if [ ${OUTPUT} ]; then
+			if [ ${OUTPUT} = true ]; then
 				traverse $DIRECTORY_PATH 0 >> ${OUTPUTFILE}	
 			else
 				traverse $DIRECTORY_PATH 0
