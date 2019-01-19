@@ -13,6 +13,7 @@ redlabel=$(tput setab 1)
 greenlabel=$(tput setab 2)
 yellowlabel=$(tput setab 3)
 bluelabel=$(tput setab 4)
+orangeChar=$(tput setab 208)
 default=$(tput sgr0)
 
 
@@ -99,7 +100,7 @@ if [ "$1" == "-h" -o "$1" == "--help" -o  $# -eq 0 ]; then
 	echo "	Copyright © 2017 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
         echo "	This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law."
 	echo
-
+	echo -e "\e[38;5;208mThank you for using our product 🙏${default}"
 	exit
 fi
 
