@@ -187,14 +187,14 @@ function traverse {
 }
 
 function printForTerminal {
-	
+
 	GETSTATUS=$(echo $1 | awk -F "|" '{print $2}')
 	GETLINK=$(echo $1 | awk -F "|" '{print $3}')
 	TRIMSPACE=$(echo $GETLINK | tr -d '[:space:]')
 	PRINTLINE=""
 
-	# In SHOWLINKS is activated then print next to each link its location
-	if [ ${SHOWLINE} = true ]; then
+	# If SHOWLINKS is activated then print next to each link its location
+	if [ ${SHOWLINE} = true -a ${DIRECTORY} = true ]; then
 		PRINTLINE=$(grep -in "${TRIMSPACE}" $2 | awk -F ":" '{print $1}')
 	fi
 
@@ -287,8 +287,35 @@ function getLinksFromLink {
 while  read LINE; do
 	URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
   	if [[ ${URL} != *"|000|"* ]]; then 
-        	printForTerminal "$URL"
-   		increaseStatus $URL
+		if [ ${PASSING} = true ] && [[ ${URL} != *"|000|"* ]] ; then 
+			if [[ ${URL} == *"|2"*"|"* ]]; then
+				printForTerminal "$URL" "$1"
+				increaseStatus $URL
+			fi
+		fi
+		if [ ${REDIRECTION} = true ]; then 
+			if [[ ${URL} == *"|3"*"|"* ]]; then
+				printForTerminal "$URL" "$1"
+				increaseStatus $URL
+			fi
+		fi
+		if [ ${CLIENTERROR} = true ]; then 
+			if [[ ${URL} == *"|4"*"|"* ]]; then
+				printForTerminal "$URL" "$1"
+				increaseStatus $URL
+			fi
+		fi
+		if [ ${SERVERERROR} = true ]; then 
+			if [[ ${URL} == *"|5"*"|"* ]]; then
+				printForTerminal "$URL" "$1"
+				increaseStatus $URL
+			fi
+		fi
+		if [ ${PASSING} != true -a ${REDIRECTION} != true -a ${CLIENTERROR} != true -a ${SERVERERROR} != true ]; then
+                	printForTerminal "$URL" "$1"
+        		increaseStatus $URL
+        	fi	
+		
 	fi
 done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
 }
