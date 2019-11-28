@@ -33,4 +33,5 @@ It can be used to validate links from different directories, projects, or online
 
 # Contributions and used Repositories
 
+* Checkout the PENDING directory to implement features that might need for the tool.
 * Special thanks to my friend [Alexandre De Masi](https://github.com/SheepOnMeth) for the testing.
