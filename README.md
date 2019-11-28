@@ -5,9 +5,9 @@
 
 A tool aiming to report the links' status for a user's repository (cloned locally), local directory, or a link.
 
-Our mission here is to provide a tool that can check if the links found, not only in html documents but any kind of document (PDFs are not supported yet). 
+Our mission here is to provide a tool that can check if the links found in different documents tpyes (not PDF supported yet) are broken or not. 
 Also, we extend the features of our tool to perform First Depth Search (FDS) to identify even more links found under tree directories.
-The tool can report results in a terminal or an output file (for further analysis). 
+The tool can output results in a terminal or in a file (for post analysis). 
 
 
 # Dependencies
