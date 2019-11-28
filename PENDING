@@ -4,3 +4,4 @@
 # Analyse the file output and show again info.
 # Implement task to show at which line of a document are the links located (DONE)
 # Make it possible for PDF files too (use pdftotext pdfilfe - | grep ..)
+# Crawler, based on the depth given number.
