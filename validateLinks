@@ -13,7 +13,6 @@ redlabel=$(tput setab 1)
 greenlabel=$(tput setab 2)
 yellowlabel=$(tput setab 3)
 bluelabel=$(tput setab 4)
-orangeChar=$(tput setab 208)
 default=$(tput sgr0)
 
 
@@ -28,12 +27,12 @@ default=$(tput sgr0)
 
 
 # Printing the manual page
-if [ "$1" == "-h" -o "$1" == "--help" -o  $# -eq 0 ]; then
+if [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ "$#" -eq 0 ]; then
 	echo 
-	echo ${bold}NAME${default}
+	echo "${bold}NAME${default}"
 	echo "	validateLinks"
 	echo
-	echo ${bold}SYNOPSIS${default}
+	echo "${bold}SYNOPSIS${default}"
 	echo "	${bold}validateLinks${default} [${underline}OPTION${default}]... [${underline}DIRECTORY${default}]... [${underline}LINK${default}]..."
 	echo
 	echo "${bold}DESCRIPTION${default}"
@@ -122,32 +121,32 @@ OUTPUTFILE=""
 SHOWLINE=false
 
 # If there is no : after a letter it means the specific letter has no argument, if it has :: it means the particular has optional, and a : has required argument.
-OPTIONS=`getopt -o d:l:PRrCSvso:i --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics,output:,linksLocation -n 'validateLinks' -- "$@"`
+OPTIONS=$(getopt -o d:l:PRrCSvso:i --long directory:,link:,passing,recursive,redirection,clientError,serverError,version,statistics,output:,linksLocation -n 'validateLinks' -- "$@")
 eval set -- "$OPTIONS"
 while true; do
-	case "$1" in 
-		-d|--directory) DIRECTORY=true;
-			case $2 in 
-				*/*) DIRECTORY_PATH=$2; shift 2;;
-				*) >&2 echo "[Error] Directory path was not provided."; shift 2;;
-			esac;;
-		-l|--link) LINK=true;
-			case $2 in 
-				https* | http* | www*) LINK_ADDRESS=$2; shift 2;;
-				*) >&2 echo "[Error] ULR address was not provided"; shift 2;;
-			esac ;;
-		-P|--passing) PASSING=true; shift;;
-		-r|--recursive) RECURSIVE=true; shift;;
-		-R|--redirection) REDIRECTION=true; shift;;
-		-C|--clientError) CLIENTERROR=true; shift;;
-		-S|--serverError) SERVERERROR=true; shift;;
-		-v|--version) VERSION=true; shift;;
-		-s|--statistics) STATISTICS=true; shift;;
-		-o|--output) OUTPUT=true; OUTPUTFILE=$2; shift 2;;
-		-i|--linksLocation) SHOWLINE=true; shift;;
-		--) shift; break;;
-		*) >&2 echo "Wrong command line argument, please try again."; exit 1;;
-	esac
+  case "$1" in 
+    -d|--directory) DIRECTORY=true;
+      case "$2" in 
+	*/*) DIRECTORY_PATH="$2"; shift 2;;
+	*) >&2 echo "[Error] Directory path was not provided."; shift 2;;
+      esac;;
+    -l|--link) LINK=true;
+      case "$2" in 
+        https* | http* | www*) LINK_ADDRESS="$2"; shift 2;;
+	*) >&2 echo "[Error] ULR address was not provided"; shift 2;;
+      esac ;;
+    -P|--passing) PASSING=true; shift;;
+    -r|--recursive) RECURSIVE=true; shift;;
+    -R|--redirection) REDIRECTION=true; shift;;
+    -C|--clientError) CLIENTERROR=true; shift;;
+    -S|--serverError) SERVERERROR=true; shift;;
+    -v|--version) VERSION=true; shift;;
+    -s|--statistics) STATISTICS=true; shift;;
+    -o|--output) OUTPUT=true; OUTPUTFILE="$2"; shift 2;;
+    -i|--linksLocation) SHOWLINE=true; shift;;
+    --) shift; break;;
+    *) >&2 echo "Wrong command line argument, please try again."; exit 1;;
+  esac
 done
 
 STATUS_SUCCESS=0
@@ -156,239 +155,248 @@ STATUS_CLIENT_ERROR=0
 STATUS_SERVER_ERROR=0
 
 # Function declarations
-function depth {
-
-	#Do a small depth checking how deep into the tree we are
-	k=0
-	while [ $k -lt $1 ]; do
-		echo -n 
-		let k++
-	done
+version()
+{
+  echo version 1.0.0
 }
 
-function traverse {
-
-	# Fix this one ...
-	# ls "$1" | while read i
-	while read i; 
-	do
-		depth $2
-		if [ -d "$1/$i" ]
-		then
-			echo "=====================================================================" 
-			echo ${bold}DIRECTORY${default}: $1/$i
-			traverse "$1/$i" `expr $2 + 1`
-		else
-			#echo "---------------------------------------------------------------------" 
-			echo FILE: $1/$i 
-			getLinkStatus $1/$i
-		fi
-	done< <(ls "$1")
+depth()
+{
+  #Do a small depth checking how deep into the tree we are
+  k=0
+  while [ "$k" -lt "$1" ]; do
+    echo -n 
+    let k++
+  done
 }
 
-function printForTerminal {
-
-	GETSTATUS=$(echo $1 | awk -F "|" '{print $2}')
-	GETLINK=$(echo $1 | awk -F "|" '{print $3}')
-	TRIMSPACE=$(echo $GETLINK | tr -d '[:space:]')
-	PRINTLINE=""
-
-	# If SHOWLINKS is activated then print next to each link its location
-	if [ ${SHOWLINE} = true -a ${DIRECTORY} = true ]; then
-		PRINTLINE=$(grep -in "${TRIMSPACE}" $2 | awk -F ":" '{print $1}')
-	fi
-
-	# If an output is specified then remove colors because they are not printed in a document
-	if [ ${OUTPUT} = true ]; then
-		greenlabel=""
-		redlabel=""
-		yellowlabel=""
-		bluelabel=""
-		default=""
-	fi
-
-	# Adding the color for invisible mode to make an awesome printing
- 	if [ ! -z $GETSTATUS ]; then 
-		if [ $GETSTATUS -lt 300 ]; then
-			echo -e "${PRINTLINE}	|-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
-		elif [ $GETSTATUS -lt 400 ]; then
-			echo -e "${PRINTLINE}	|-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
-		elif [ $GETSTATUS -lt 500 ]; then
-			echo -e "${PRINTLINE}	|-${redlabel}$GETSTATUS${default}-| $GETLINK"
-		elif [ $GETSTATUS -lt 600 ]; then
-			echo -e "${PRINTLINE}	|-${bluelabel}$GETSTATUS${default}-| $GETLINK"
-		else
-			echo "Unknow option..."
-		fi
-	fi
+traverse()
+{
+  # Fix this one ...
+  # ls "$1" | while read i
+  while -r read i; do
+    depth "$2"
+    if [ -d "$1/$i" ]; then
+      echo =====================================================================
+      echo "${bold}DIRECTORY${default}: $1/$i" 
+      traverse "$1/$i" "$(($2 + 1))"
+    else
+      echo "FILE: $1/$i" 
+      getLinkStatus "$1/$i"
+    fi
+  done< <(ls "$1")
 }
 
-function getLinkStatus {
+printForTerminal()
+{
+  GETSTATUS=$(echo "$1" | awk -F "|" '{print $2}')
+  GETLINK=$(echo "$1" | awk -F "|" '{print $3}')
+  TRIMSPACE=$(echo "$GETLINK" | tr -d '[:space:]')
+  PRINTLINE=""
 
-while read LINE; do
-   URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
+  # If SHOWLINKS is activated then print next to each link its location
+  if [ "$SHOWLINE" ] && [ "$DIRECTORY" ]; then
+    PRINTLINE=$(grep -in "$TRIMSPACE" "$2" | awk -F ":" '{print $1}')
+  fi
 
-   if [[ ${URL} != *"|000|"* ]]; then 
-	if [ ${PASSING} = true ] && [[ ${URL} != *"|000|"* ]] ; then 
-		if [[ ${URL} == *"|2"*"|"* ]]; then
-			printForTerminal "$URL" "$1"
-			increaseStatus $URL
-		fi
-	fi
-	if [ ${REDIRECTION} = true ]; then 
-		if [[ ${URL} == *"|3"*"|"* ]]; then
-			printForTerminal "$URL" "$1"
-			increaseStatus $URL
-		fi
-	fi
-	if [ ${CLIENTERROR} = true ]; then 
-		if [[ ${URL} == *"|4"*"|"* ]]; then
-			printForTerminal "$URL" "$1"
-			increaseStatus $URL
-		fi
-	fi
-	if [ ${SERVERERROR} = true ]; then 
-		if [[ ${URL} == *"|5"*"|"* ]]; then
-			printForTerminal "$URL" "$1"
-			increaseStatus $URL
-		fi
-	fi
-	if [ ${PASSING} != true -a ${REDIRECTION} != true -a ${CLIENTERROR} != true -a ${SERVERERROR} != true ]; then
-                printForTerminal "$URL" "$1"
-        	increaseStatus $URL
-        fi	
+  # If an output is specified then remove colors because they are not printed in a document
+  if [ "$OUTPUT" ]; then
+    greenlabel=""
+    redlabel=""
+    yellowlabel=""
+    bluelabel=""
+    default=""
+  fi
 
-   fi 	
-done< <(egrep -ro 'https?://[^ ]+' $1 | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',")(;}*' | sed 's/\.$//' | sed 's/>.*//' | uniq )
+  # Adding the color for invisible mode to make an awesome printing
+  if [ ! -z "$GETSTATUS" ]; then 
+    if [ "$GETSTATUS" -lt 300 ]; then
+      echo -e "$PRINTLINE |-${greenlabel}$GETSTATUS${default}-| $GETLINK"	
+    elif [ "$GETSTATUS" -lt 400 ]; then
+      echo -e "$PRINTLINE |-${yellowlabel}$GETSTATUS${default}-| $GETLINK"	
+    elif [ "$GETSTATUS" -lt 500 ]; then
+      echo -e "$PRINTLINE |-${redlabel}$GETSTATUS${default}-| $GETLINK"
+    elif [ "$GETSTATUS" -lt 600 ]; then
+      echo -e "$PRINTLINE |-${bluelabel}$GETSTATUS${default}-| $GETLINK"
+    else
+     echo "Unknow option..."
+    fi
+  fi
 }
 
-function increaseStatus {
+getLinkStatus()
+{
+  while -r read LINE; do
+    URL=$(curl -o /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE")
 
-	STATUS=$(echo $1 | awk -F "|" '{print $2}')
-	
-	if [ ! -z $STATUS ]; then 
-		# This long case statement is responsible for increasing the STATUS variable counts
- 		if [ $STATUS -lt 300 ]; then
-			((++STATUS_SUCCESS))
-		elif [ $STATUS -lt 400 ]; then
-			((++STATUS_REDIRECT))
-		elif [ $STATUS -lt 500 ]; then
-			((++STATUS_CLIENT_ERROR))
-		elif [ $STATUS -lt 600 ]; then
-			((++STATUS_SERVER_ERROR))
-		else
-			echo "Such status don't exist."
-		fi
+    if [[ "$URL" != *"|000|"* ]]; then 
+      if [ "$PASSING"  ] && [[ "$URL" != *"|000|"* ]] ; then 
+	if [[ "$URL" == *"|2"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
 	fi
+      fi
+
+      if [ "$REDIRECTION" ]; then 
+	if [[ "$URL" == *"|3"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
+	fi
+      fi
+
+      if [ "$CLIENTERROR" ]; then 
+	if [[ "$URL" == *"|4"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
+	fi
+      fi
+      
+      if [ "$SERVERERROR" ]; then 
+	if [[ "$URL" == *"|5"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
+	fi
+      fi
+
+      if [ ! "$PASSING" ] && [ ! "$REDIRECTION" ] && [ ! "$CLIENTERROR" ] && [ ! "$SERVERERROR" ]; then
+        printForTerminal "$URL" "$1"
+        increaseStatus "$URL"
+      fi
+    fi 	
+  done< <(grep -Ero 'https?://[^ ]+' "$1" | sort | awk -F ":" '{print $1":"$2}' | tr -d '}*' | tr -d ',")(;}*' | sed 's/\.$//' | sed 's/>.*//' | uniq )
 }
 
-function getLinksFromLink { 
+increaseStatus()
+{
+  STATUS=$(echo "$1" | awk -F "|" '{print $2}')
+  if [ ! -z "$STATUS" ]; then 
+    # This long case statement is responsible for increasing the STATUS variable counts
+    if [ "$STATUS" -lt 300 ]; then
+      ((++STATUS_SUCCESS))
+    elif [ "$STATUS" -lt 400 ]; then
+      ((++STATUS_REDIRECT))
+    elif [ "$STATUS" -lt 500 ]; then
+      ((++STATUS_CLIENT_ERROR))
+    elif [ "$STATUS" -lt 600 ]; then
+      ((++STATUS_SERVER_ERROR))
+    else
+      echo "Such status don't exist."
+    fi
+  fi
+}
 
-while  read LINE; do
-	URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
-  	if [[ ${URL} != *"|000|"* ]]; then 
-		if [ ${PASSING} = true ] && [[ ${URL} != *"|000|"* ]] ; then 
-			if [[ ${URL} == *"|2"*"|"* ]]; then
-				printForTerminal "$URL" "$1"
-				increaseStatus $URL
-			fi
-		fi
-		if [ ${REDIRECTION} = true ]; then 
-			if [[ ${URL} == *"|3"*"|"* ]]; then
-				printForTerminal "$URL" "$1"
-				increaseStatus $URL
-			fi
-		fi
-		if [ ${CLIENTERROR} = true ]; then 
-			if [[ ${URL} == *"|4"*"|"* ]]; then
-				printForTerminal "$URL" "$1"
-				increaseStatus $URL
-			fi
-		fi
-		if [ ${SERVERERROR} = true ]; then 
-			if [[ ${URL} == *"|5"*"|"* ]]; then
-				printForTerminal "$URL" "$1"
-				increaseStatus $URL
-			fi
-		fi
-		if [ ${PASSING} != true -a ${REDIRECTION} != true -a ${CLIENTERROR} != true -a ${SERVERERROR} != true ]; then
-                	printForTerminal "$URL" "$1"
-        		increaseStatus $URL
-        	fi	
+getLinksFromLink()
+{ 
+  while -r read LINE; do
+    URL=$(curl -s -r /dev/null --silent --head --write-out "|%{http_code}| $LINE\n" "$LINE" --output /dev/null)
+    if [[ "$URL" != *"|000|"* ]]; then 
+      if [ "$PASSING" ] && [[ "$URL" != *"|000|"* ]] ; then 
+	if [[ "$URL" == *"|2"*"|"* ]]; then
+          printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
+	fi
+      fi
+      
+      if [ "$REDIRECTION" ]; then 
+	if [[ "$URL" == *"|3"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus  "$URL"
+        fi
+      fi
 		
+      if [ "$CLIENTERROR" ]; then 
+	if [[ "$URL" == *"|4"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
 	fi
-done< <(lynx -dump $1 | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
+      fi
+		
+      if [ "$SERVERERROR" ]; then 
+	if [[ "$URL" == *"|5"*"|"* ]]; then
+	  printForTerminal "$URL" "$1"
+	  increaseStatus "$URL"
+	fi
+      fi
+		
+      if [ ! "$PASSING" ] && [ ! "$REDIRECTION" ] && [ ! "$CLIENTERROR" ] && [ ! "$SERVERERROR" ]; then
+        printForTerminal "$URL" "$1"
+        increaseStatus "$URL"
+      fi	
+    fi
+  done< <(lynx -dump "$1" | grep -A999 "^References$" | tail -n +3 | awk '{print $2 }')
 }
 
 
-function printReports {
-
-	# Calculating total link's validity
-	TOTAL=$((STATUS_SUCCESS+STATUS_REDIRECT+STATUS_CLIENT_ERROR+STATUS_SERVER_CLIENT))
-	TOTAL_VALIDITY=$(echo "scale=2; ((($STATUS_SUCCESS + $STATUS_REDIRECT)) / $TOTAL) * 100" | bc)
+printReports()
+{
+  # Calculating total link's validity
+  TOTAL=$((STATUS_SUCCESS+STATUS_REDIRECT+STATUS_CLIENT_ERROR+STATUS_SERVER_CLIENT))
+  TOTAL_VALIDITY=$(echo "scale=2; ((($STATUS_SUCCESS + $STATUS_REDIRECT)) / $TOTAL) * 100" | bc)
 	
-	echo 
-	echo 
-	echo "Total link's STATUS"
-	echo "===================" 
-	echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
-	echo "${yellowlabel}$STATUS_REDIRECT${default} Redirection links" 
-	echo "${redlabel}$STATUS_CLIENT_ERROR${default} Client error links" 
-	echo "${bluelabel}$STATUS_SERVER_ERROR${default} Server error links"
-	echo "Total link's validity: $TOTAL_VALIDITY%"
+  echo 
+  echo 
+  echo "Total link's STATUS"
+  echo "===================" 
+  echo "${greenlabel}$STATUS_SUCCESS${default} Success links" 
+  echo "${yellowlabel}$STATUS_REDIRECT${default} Redirection links" 
+  echo "${redlabel}$STATUS_CLIENT_ERROR${default} Client error links" 
+  echo "${bluelabel}$STATUS_SERVER_ERROR${default} Server error links"
+  echo "Total link's validity: $TOTAL_VALIDITY%"
 }
 
 # If user didn't provide us with a directory or executable we search the current working directory
-if [ "${DIRECTORY}" != true -a "${LINK}" != true ]; then
-	for file in *
-	do
-    		if [[ -f $file ]]; then
-			if [ ${OUTPUT} = true ]; then
-				getLinkStatus $file >> ${OUTPUTFILE}	
-			else
-				getLinkStatus $file
-    			fi
-		fi
-	done
+if [ ! "$DIRECTORY" ] && [ "$LINK" ]; then
+  for file in *; do
+    if [[ -f $file ]]; then
+      if [ "$OUTPUT" ]; then
+	getLinkStatus "$file" >> "$OUTPUTFILE"	
+      else
+	getLinkStatus "$file"
+      fi
+    fi
+  done
 else
-	if [ ${DIRECTORY} = true -a ${RECURSIVE} = true ]; then
-			if [ ${OUTPUT} = true ]; then
-				traverse $DIRECTORY_PATH 0 >> ${OUTPUTFILE}	
-			else
-				traverse $DIRECTORY_PATH 0
-			fi
+  if [ "$DIRECTORY" ] && [ "$RECURSIVE" ]; then
+    if [ "$OUTPUT" ]; then
+      traverse "$DIRECTORY_PATH" 0 >> "$OUTPUTFILE"	
+    else
+      traverse "$DIRECTORY_PATH" 0
+    fi
+  else
+    for file in "$DIRECTORY_PATH"; do
+      PATH_FILE="$DIRECTORY_PATH/$file"
+      if [[ -f "$PATH_FILE" ]]; then
+        if [ "$OUTPUT" ]; then
+	  echo "FILE: $PATH_FILE" >> "$OUTPUTFILE"
+	  getLinkStatus "$PATH_FILE" >> "$OUTPUTFILE"
 	else
-		for file in `ls ${DIRECTORY_PATH}`
-        	do
-			PATH_FILE="${DIRECTORY_PATH}/${file}"
-                	if [[ -f $PATH_FILE ]]; then
-                     	  	if [ ${OUTPUT} = true ]; then
-					echo "FILE: $PATH_FILE" >> ${OUTPUTFILE}
-					getLinkStatus $PATH_FILE >> ${OUTPUTFILE}
-				else
-					echo "FILE: $PATH_FILE"
-					getLinkStatus $PATH_FILE
-				fi
-			fi
-        	done
-	fi
+	  echo "FILE: $PATH_FILE"
+	  getLinkStatus "$PATH_FILE"
+        fi
+      fi
+    done
+  fi
 
-	if [ ${LINK} = true ]; then 
-		if [ ${OUTPUT} = true ]; then
-			getLinksFromLink ${LINK_ADDRESS} >> ${OUTPUTFILE}
-		else
-			getLinksFromLink ${LINK_ADDRESS}
-	
-		fi
-	fi
+  if [ "$LINK" ]; then 
+    if [ "$OUTPUT" ]; then
+      getLinksFromLink "$LINK_ADDRESS" >> "$OUTPUTFILE"
+    else
+      getLinksFromLink "$LINK_ADDRESS"
+    fi
+  fi
 fi
 
-if [ ${STATISTICS} = true ]; then
-	if [ ${OUTPUT} = true ]; then
-		printReports >> ${OUTPUTFILE}
-	else
-		printReports
-	fi
+if [ "$STATISTICS" ]; then
+  if [ "$OUTPUT" ]; then
+    printReports >> "$OUTPUTFILE"
+  else
+    printReports
+  fi
 fi
 
-exit
+if [ "$VERSION" ]; then
+  version
+fi
+
+exit 0
+
